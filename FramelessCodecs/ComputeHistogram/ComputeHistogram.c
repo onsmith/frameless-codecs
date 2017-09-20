@@ -5,7 +5,7 @@
 #include "stdint.h"
 
 
-void printUsage(char *filename);
+void print_usage(char *filename);
 
 
 /**
@@ -13,46 +13,48 @@ void printUsage(char *filename);
  */
 int main(int argc, char *argv[]) {
 	// Parse arguments
-	char *inputFilename;
-	int frameWidth, frameHeight;
+	char *input_filename;
+	int frame_width, frame_height;
 	if (argc == 4) {
-		inputFilename = argv[1];
-		frameWidth    = atoi(argv[2]);
-		frameHeight   = atoi(argv[3]);
+		input_filename = argv[1];
+		frame_width    = atoi(argv[2]);
+		frame_height   = atoi(argv[3]);
 	} else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
-		printUsage(argv[0]);
+		print_usage(argv[0]);
 		exit(1);
 	}
 
 	// Allocate histogram, tracking parameters
-	int frameCount = 0;
-	uint32_t *histogram = calloc((0x1 << 16), sizeof(uint32_t));
+	int frame_size       = frame_width*frame_height,
+	    frame_count      = 0,
+	    pixel_bit_depth  = 8, // valid range is [1, 16]
+	    histogram_length = (0x1 << pixel_bit_depth);
+	uint32_t *histogram = calloc(histogram_length, sizeof(uint32_t));
 
 	// Open file, allocate buffer
-	int frameSize = frameWidth*frameHeight;
-	uint16_t *frame = malloc(frameSize * sizeof(uint16_t));
-	FILE *inputFile = fopen(inputFilename, "rb");
+	uint16_t *frame = malloc(frame_size * sizeof(uint16_t));
+	FILE *input_file = fopen(input_filename, "rb");
 
 	// Loop through file and accumulate histogram
-	while (fread(frame, sizeof(*frame), frameSize, inputFile) == frameSize) {
-		frameCount++;
-		for (int i = 0; i < frameSize; i++) {
-			histogram[frame[i]]++;
+	while (fread(frame, sizeof(*frame), frame_size, input_file) == frame_size) {
+		frame_count++;
+		for (int i = 0; i < frame_size; i++) {
+			histogram[frame[i] >> (16 - pixel_bit_depth)]++;
 		}
 	}
 
 	// Close file
-	fclose(inputFile);
+	fclose(input_file);
 
 	// Free frame memory
 	free(frame);
 
 	// Output results
-	for (int i = 0; i < (0x1 << 16); i++) {
+	for (int i = 0; i < histogram_length; i++) {
 		printf("%i\n", histogram[i]);
 	}
-	fprintf("%i frames analyzed.\n", frameCount);
+	printf("%i frames analyzed.\n", frame_count);
 
 	// Free histogram memory
 	free(histogram);
@@ -65,6 +67,6 @@ int main(int argc, char *argv[]) {
 /**
  * Prints the program usage to the standard output stream.
  */
-void printUsage(char *filename) {
+void print_usage(char *filename) {
 	printf("Usage: %s input-filename frame-width frame-height\n", filename);
 }

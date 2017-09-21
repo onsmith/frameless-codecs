@@ -5,7 +5,17 @@
 #include "stdint.h"
 
 
-void print_usage(char *filename);
+// valid range is [1, 16]
+#define HIST_PIXEL_BIT_DEPTH 8
+#define HIST_LENGTH          (0x1 << HIST_PIXEL_BIT_DEPTH)
+
+
+/**
+ * Prints the program usage to the standard output stream.
+ */
+void print_usage(char *filename) {
+	printf("Usage: %s input-filename frame-width frame-height\n", filename);
+}
 
 
 /**
@@ -26,11 +36,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Allocate histogram, tracking parameters
-	int frame_size       = frame_width*frame_height,
-	    frame_count      = 0,
-	    pixel_bit_depth  = 8, // valid range is [1, 16]
-	    histogram_length = (0x1 << pixel_bit_depth);
-	uint32_t *histogram = calloc(histogram_length, sizeof(uint32_t));
+	int frame_size  = frame_width*frame_height,
+	    frame_count = 0;
+	uint32_t *histogram = calloc(HIST_LENGTH, sizeof(uint32_t));
 
 	// Open file, allocate buffer
 	uint16_t *frame = malloc(frame_size * sizeof(uint16_t));
@@ -40,7 +48,7 @@ int main(int argc, char *argv[]) {
 	while (fread(frame, sizeof(*frame), frame_size, input_file) == frame_size) {
 		frame_count++;
 		for (int i = 0; i < frame_size; i++) {
-			histogram[frame[i] >> (16 - pixel_bit_depth)]++;
+			histogram[frame[i] >> (16 - HIST_PIXEL_BIT_DEPTH)]++;
 		}
 	}
 
@@ -51,7 +59,7 @@ int main(int argc, char *argv[]) {
 	free(frame);
 
 	// Output results
-	for (int i = 0; i < histogram_length; i++) {
+	for (int i = 0; i < HIST_LENGTH; i++) {
 		printf("%i\n", histogram[i]);
 	}
 	printf("%i frames analyzed.\n", frame_count);
@@ -60,13 +68,6 @@ int main(int argc, char *argv[]) {
 	free(histogram);
 
 	// All done
+	system("pause");
 	return 0;
-}
-
-
-/**
- * Prints the program usage to the standard output stream.
- */
-void print_usage(char *filename) {
-	printf("Usage: %s input-filename frame-width frame-height\n", filename);
 }

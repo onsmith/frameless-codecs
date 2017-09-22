@@ -1,163 +1,159 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include "stdlib.h"
-#include "stdio.h"
 #include "string.h"
 #include "stdint.h"
+#include "stdio.h"
+#include "assert.h"
+
+#include "frame.h"
 
 
-typedef enum {
-	gray16le,
-	yuv420p,
-	yuv422p,
-	yuv444p,
-	unknown
-} video_format;
+/*
+** Converts a gray16le frame to a yuv444p frame.
+*/
+void gray16le_to_yuv444p(frame_t* src, frame_t* dst) {
+	assert(src->width  == dst->width);
+	assert(src->height == dst->height);
+	assert(src->format == VIDEO_FORMAT_GRAY16LE);
+	assert(dst->format == VIDEO_FORMAT_YUV444P);
 
+	const int num_pixels = src->width * src->height;
+	uint16_t *src_data = src->data;
+	uint8_t  *dst_data = dst->data;
 
-/**
- * Lookup function to convert a video format string to a video_format enum value.
- */
-video_format lookup_video_format(char *video_format_string) {
-	if (strcmp(video_format_string, "gray16le") == 0) {
-		return gray16le;
-	} else if (strcmp(video_format_string, "yuv420p") == 0) {
-		return yuv420p;
-	} else if (strcmp(video_format_string, "yuv422p") == 0) {
-		return yuv422p;
-	} else if (strcmp(video_format_string, "yuv444p") == 0) {
-		return yuv444p;
-	} else {
-		return unknown;
+	// Luma
+	for (int i = 0; i < num_pixels; i++) {
+		dst_data[i] = (uint8_t) (src_data[i] >> 8);
+	}
+
+	// U (chroma)
+	for (int i = 0; i < num_pixels; i++) {
+		dst_data[num_pixels + i] = 0x80;
+	}
+
+	// V (chroma)
+	for (int i = 0; i < num_pixels; i++) {
+		dst_data[2 * num_pixels + i] = 0x80;
 	}
 }
 
 
-/**
- * Prints the program usage to the standard output stream.
- */
-void print_usage(char *filename) {
+/*
+** Converts a yuv444p frame to a yuv422p frame.
+*/
+void yuv444p_to_yuv422p(frame_t* src, frame_t* dst) {
+	assert(src->width  == dst->width);
+	assert(src->height == dst->height);
+	assert(src->format == VIDEO_FORMAT_YUV444P);
+	assert(dst->format == VIDEO_FORMAT_YUV422P);
+
+	const int num_pixels = src->width * src->height;
+	uint8_t *src_y = src->data;
+	uint8_t *src_u = &src_y[num_pixels]; /* skip num_pixels for Y plane */
+	uint8_t *src_v = &src_u[num_pixels]; /* skip num_pixels for U plane */
+	
+	uint8_t *dst_y = dst->data;
+	uint8_t *dst_u = &dst_y[num_pixels];     /* skip num_pixels   for Y plane */
+	uint8_t *dst_v = &dst_u[num_pixels / 2]; /* skip num_pixels/2 for U plane */
+
+	// Luma
+	memcpy(dst_y, src_y, num_pixels);
+
+	// U (chroma)
+	for (int i = 0; i < num_pixels / 2; i++) {
+		dst_u[i] = src_u[2 * i];
+	}
+
+	// V (chroma)
+	for (int i = 0; i < num_pixels / 2; i++) {
+		dst_v[i] = src_v[2 * i];
+	}
+}
+
+
+/*
+** Converts a yuv444p frame to a yuv420p frame.
+*/
+void yuv444p_to_yuv420p(frame_t* src, frame_t* dst) {
+	assert(src->width  == dst->width);
+	assert(src->height == dst->height);
+	assert(src->format == VIDEO_FORMAT_YUV444P);
+	assert(dst->format == VIDEO_FORMAT_YUV420P);
+
+	const int num_pixels = src->width * src->height;
+	uint8_t *src_y = src->data;
+	uint8_t *src_u = &src_y[num_pixels]; /* skip num_pixels for Y plane */
+	uint8_t *src_v = &src_u[num_pixels]; /* skip num_pixels for U plane */
+	
+	uint8_t *dst_y = dst->data;
+	uint8_t *dst_u = &dst_y[num_pixels];     /* skip num_pixels   for Y plane */
+	uint8_t *dst_v = &dst_u[num_pixels / 4]; /* skip num_pixels/4 for U plane */
+
+	// Y (luma)
+	memcpy(dst_y, src_y, num_pixels);
+
+	// U (chroma)
+	for (int i = 0; i < num_pixels / 4; i++) {
+		dst_u[i] = src_u[((2 * i) % src->width) + 2 * src->width * ((2 * i) / src->width)];
+	}
+
+	// V (chroma)
+	for (int i = 0; i < num_pixels / 4; i++) {
+		dst_v[i] = src_v[((2 * i) % src->width) + 2 * src->width*((2 * i) / src->width)];
+	}
+}
+
+
+/*
+** Copies a given frame, converting it to yuv444p format.
+*/
+void convert_to_yuv444p(frame_t* src, frame_t* dst) {
+	switch (src->format) {
+	case (VIDEO_FORMAT_GRAY16LE):
+		gray16le_to_yuv444p(src, dst);
+		break;
+	case (VIDEO_FORMAT_YUV444P):
+		copy_frame(src, dst);
+		break;
+	}
+}
+
+
+/*
+** Copies a given frame, converting it out of yuv444p format.
+*/
+void convert_from_yuv444p(frame_t* src, frame_t* dst) {
+	switch (dst->format) {
+	case (VIDEO_FORMAT_YUV444P):
+		copy_frame(src, dst);
+		break;
+	case (VIDEO_FORMAT_YUV422P):
+		yuv444p_to_yuv422p(src, dst);
+		break;
+	case (VIDEO_FORMAT_YUV420P):
+		yuv444p_to_yuv420p(src, dst);
+		break;
+	}
+}
+
+
+/*
+** Prints the program usage to the standard output stream.
+*/
+void print_usage(char* filename) {
 	printf("Usage: %s input-filename output-filename frame-width frame-height input-format output-format\n", filename);
 }
 
 
-/**
- * Calculates the size of a pixel.
- */
-size_t pixel_size(const video_format frame_format) {
-	switch (frame_format) {
-	case (yuv444p):
-	case (yuv422p):
-	case (yuv420p):
-		return sizeof(uint8_t);
-	case (gray16le):
-		return sizeof(uint16_t);
-	default:
-		return -1;
-	}
-}
-
-
-/**
- * Calculates the size of a frame.
- */
-size_t frame_size(const video_format frame_format, const int frame_width, const int frame_height) {
-	switch (frame_format) {
-	case (yuv444p):
-		return sizeof(uint8_t) * frame_width * frame_height * 3;
-	case (yuv422p):
-		return sizeof(uint8_t) * frame_width * frame_height * 2;
-	case (yuv420p):
-		return sizeof(uint8_t) * frame_width * frame_height * 3 / 2;
-	case (gray16le):
-		return sizeof(uint16_t) * frame_width * frame_height;
-	default:
-		return -1;
-	}
-}
-
-
-/**
- * Allocates memory for a frame.
- */
-void *malloc_frame(const video_format frame_format, const int frame_width, const int frame_height) {
-	return malloc(frame_size(frame_format, frame_width, frame_height));
-}
-
-
-/**
- * Converts a gray16le frame to a yuv444p frame.
- */
-void gray16le_to_yuv444p(uint8_t *output_frame, uint16_t *input_frame, const int frame_width, const int frame_height) {
-	const int num_pixels = frame_width * frame_height;
-
-	// Luma
-	for (int i = 0; i < num_pixels; i++) {
-		output_frame[i] = (uint8_t)(input_frame[i] >> 8);
-	}
-
-	// U (chroma)
-	for (int i = 0; i < num_pixels; i++) {
-		output_frame[num_pixels + i] = 0x80;
-	}
-
-	// V (chroma)
-	for (int i = 0; i < num_pixels; i++) {
-		output_frame[2 * num_pixels + i] = 0x80;
-	}
-}
-
-
-/**
- * Converts a yuv444p frame to a yuv422p frame.
- */
-void yuv444p_to_yuv422p(uint8_t *output_frame, uint8_t *input_frame, const int frame_width, const int frame_height) {
-	const int num_pixels = frame_width * frame_height;
-
-	// Luma
-	memcpy(output_frame, input_frame, num_pixels);
-
-	// U (chroma)
-	for (int i = 0; i < num_pixels / 2; i++) {
-		output_frame[num_pixels + i] = input_frame[num_pixels + 2 * i];
-	}
-
-	// V (chroma)
-	for (int i = 0; i < num_pixels / 2; i++) {
-		output_frame[num_pixels * 3 / 2 + i] = input_frame[2 * num_pixels + 2 * i];
-	}
-}
-
-
-/**
- * Converts a yuv444p frame to a yuv420p frame.
- */
-void yuv444p_to_yuv420p(uint8_t *output_frame, uint8_t *input_frame, const int frame_width, const int frame_height) {
-	const int num_pixels = frame_width * frame_height;
-
-	// Y (luma)
-	memcpy(output_frame, input_frame, num_pixels);
-
-	// U (chroma)
-	for (int i = 0; i < num_pixels / 4; i++) {
-		output_frame[num_pixels + i] = input_frame[num_pixels + ((2 * i) % frame_width) + 2 * frame_width * ((2 * i) / frame_width)];
-	}
-
-	// V (chroma)
-	for (int i = 0; i < num_pixels / 4; i++) {
-		output_frame[num_pixels * 5 / 4 + i] = input_frame[2 * num_pixels + ((2 * i) % frame_width) + 2 * frame_width*((2 * i) / frame_width)];
-	}
-}
-
-
-/**
- * Defines the entry point for the console application.
- */
+/*
+** Defines the entry point for the console application.
+*/
 int main(int argc, char *argv[]) {
 	// Parse command line arguments
 	char *input_filename, *output_filename;
 	int frame_width, frame_height;
-	video_format input_format, output_format;
+	video_format_t input_format, output_format;
 	if (argc == 7) {
 		input_filename  = argv[1];
 		output_filename = argv[2];
@@ -173,22 +169,21 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Validate input and output formats
-	if (input_format != gray16le) {
+	if (input_format != VIDEO_FORMAT_GRAY16LE && input_format != VIDEO_FORMAT_YUV444P) {
 		fprintf(stderr, "Unrecognized input format.\n");
-		fprintf(stderr, "Valid values are: gray16le\n");
+		fprintf(stderr, "Valid values are: gray16le, yuv444p\n");
 		exit(1);
 	}
-	if (output_format == unknown || output_format == gray16le) {
+	if (output_format == VIDEO_FORMAT_GRAY16LE || output_format == VIDEO_FORMAT_UNKNOWN) {
 		fprintf(stderr, "Unrecognized output format.\n");
 		fprintf(stderr, "Valid values are: yuv420p, yuv422p, yuv444p\n");
 		exit(1);
 	}
 
-	// Allocate frame buffers
-	const int num_pixels = frame_width*frame_height;
-	uint16_t *input_frame  = malloc_frame(input_format,  frame_width, frame_height);
-	uint8_t  *mid_frame    = malloc_frame(yuv444p,       frame_width, frame_height);
-	uint8_t  *output_frame = malloc_frame(output_format, frame_width, frame_height);
+	// Allocate frames
+	frame_t *input_frame  = create_frame(input_format,         frame_width, frame_height);
+	frame_t *mid_frame    = create_frame(VIDEO_FORMAT_YUV444P, frame_width, frame_height);
+	frame_t *output_frame = create_frame(output_format,        frame_width, frame_height);
 
 	// Open input/output files
 	FILE *input_file  = fopen(input_filename,  "rb");
@@ -196,10 +191,13 @@ int main(int argc, char *argv[]) {
 
 	// Loop through frames and perform format conversion
 	int frame_count = 0;
-	while (fread(input_frame, sizeof(*input_frame), num_pixels, input_file) == num_pixels) {
-		gray16le_to_yuv444p(mid_frame, input_frame, num_pixels);
-		yuv444p_to_yuv422p(output_frame, mid_frame, frame_width, frame_height);
-		fwrite(output_frame, sizeof(*output_frame), num_pixels * 3/2, output_file);
+	while (fread(input_frame->data, 1, sizeof_frame(input_frame), input_file) == sizeof_frame(input_frame)) {
+		if ((frame_count + 1) % 30 == 0) {
+			printf("Encoding frame %i...\n", frame_count + 1);
+		}
+		convert_to_yuv444p(input_frame, mid_frame);
+		convert_from_yuv444p(mid_frame, output_frame);
+		fwrite(output_frame->data, 1, sizeof_frame(output_frame), output_file);
 		frame_count++;
 	}
 
@@ -208,12 +206,12 @@ int main(int argc, char *argv[]) {
 	fclose(output_file);
 
 	// Free memory
-	free(input_frame);
-	free(mid_frame);
-	free(output_frame);
+	destroy_frame(input_frame);
+	destroy_frame(mid_frame);
+	destroy_frame(output_frame);
 
 	// Report results
-	printf("%i frames converted.\n", frame_count);
+	printf("%i frames successfully converted.\n", frame_count);
 	system("pause");
 
 	// All done

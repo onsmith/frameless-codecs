@@ -18,5 +18,13 @@
     <ClCompile Include="ConvertYUVFormat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="frame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

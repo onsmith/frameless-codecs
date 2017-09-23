@@ -9,14 +9,17 @@
 #include "frame.h"
 
 
+#define PRINT_UPDATE_EVERY_X_FRAMES 30
+
+
 /*
 ** Converts a gray16le frame to a yuv444p frame.
 */
 void gray16le_to_yuv444p(frame_t* src, frame_t* dst) {
 	assert(src->width  == dst->width);
 	assert(src->height == dst->height);
-	assert(src->format == VIDEO_FORMAT_GRAY16LE);
-	assert(dst->format == VIDEO_FORMAT_YUV444P);
+	assert(src->format == FRAME_FORMAT_GRAY16LE);
+	assert(dst->format == FRAME_FORMAT_YUV444P);
 
 	const int num_pixels = src->width * src->height;
 	uint16_t *src_data = src->data;
@@ -45,8 +48,8 @@ void gray16le_to_yuv444p(frame_t* src, frame_t* dst) {
 void yuv444p_to_yuv422p(frame_t* src, frame_t* dst) {
 	assert(src->width  == dst->width);
 	assert(src->height == dst->height);
-	assert(src->format == VIDEO_FORMAT_YUV444P);
-	assert(dst->format == VIDEO_FORMAT_YUV422P);
+	assert(src->format == FRAME_FORMAT_YUV444P);
+	assert(dst->format == FRAME_FORMAT_YUV422P);
 
 	const int num_pixels = src->width * src->height;
 	uint8_t *src_y = src->data;
@@ -78,8 +81,8 @@ void yuv444p_to_yuv422p(frame_t* src, frame_t* dst) {
 void yuv444p_to_yuv420p(frame_t* src, frame_t* dst) {
 	assert(src->width  == dst->width);
 	assert(src->height == dst->height);
-	assert(src->format == VIDEO_FORMAT_YUV444P);
-	assert(dst->format == VIDEO_FORMAT_YUV420P);
+	assert(src->format == FRAME_FORMAT_YUV444P);
+	assert(dst->format == FRAME_FORMAT_YUV420P);
 
 	const int num_pixels = src->width * src->height;
 	uint8_t *src_y = src->data;
@@ -110,10 +113,10 @@ void yuv444p_to_yuv420p(frame_t* src, frame_t* dst) {
 */
 void convert_to_yuv444p(frame_t* src, frame_t* dst) {
 	switch (src->format) {
-	case (VIDEO_FORMAT_GRAY16LE):
+	case (FRAME_FORMAT_GRAY16LE):
 		gray16le_to_yuv444p(src, dst);
 		break;
-	case (VIDEO_FORMAT_YUV444P):
+	case (FRAME_FORMAT_YUV444P):
 		copy_frame(src, dst);
 		break;
 	}
@@ -125,13 +128,13 @@ void convert_to_yuv444p(frame_t* src, frame_t* dst) {
 */
 void convert_from_yuv444p(frame_t* src, frame_t* dst) {
 	switch (dst->format) {
-	case (VIDEO_FORMAT_YUV444P):
+	case (FRAME_FORMAT_YUV444P):
 		copy_frame(src, dst);
 		break;
-	case (VIDEO_FORMAT_YUV422P):
+	case (FRAME_FORMAT_YUV422P):
 		yuv444p_to_yuv422p(src, dst);
 		break;
-	case (VIDEO_FORMAT_YUV420P):
+	case (FRAME_FORMAT_YUV420P):
 		yuv444p_to_yuv420p(src, dst);
 		break;
 	}
@@ -153,14 +156,14 @@ int main(int argc, char *argv[]) {
 	// Parse command line arguments
 	char *input_filename, *output_filename;
 	int frame_width, frame_height;
-	video_format_t input_format, output_format;
+	frame_format_t input_format, output_format;
 	if (argc == 7) {
 		input_filename  = argv[1];
 		output_filename = argv[2];
 		frame_width     = atoi(argv[3]);
 		frame_height    = atoi(argv[4]);
-		input_format    = lookup_video_format(argv[5]);
-		output_format   = lookup_video_format(argv[6]);
+		input_format    = lookup_frame_format(argv[5]);
+		output_format   = lookup_frame_format(argv[6]);
 	}
 	else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
@@ -169,12 +172,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Validate input and output formats
-	if (input_format != VIDEO_FORMAT_GRAY16LE && input_format != VIDEO_FORMAT_YUV444P) {
+	if (input_format != FRAME_FORMAT_GRAY16LE && input_format != FRAME_FORMAT_YUV444P) {
 		fprintf(stderr, "Unrecognized input format.\n");
 		fprintf(stderr, "Valid values are: gray16le, yuv444p\n");
 		exit(1);
 	}
-	if (output_format == VIDEO_FORMAT_GRAY16LE || output_format == VIDEO_FORMAT_UNKNOWN) {
+	if (output_format == FRAME_FORMAT_GRAY16LE || output_format == FRAME_FORMAT_UNKNOWN) {
 		fprintf(stderr, "Unrecognized output format.\n");
 		fprintf(stderr, "Valid values are: yuv420p, yuv422p, yuv444p\n");
 		exit(1);
@@ -182,7 +185,7 @@ int main(int argc, char *argv[]) {
 
 	// Allocate frames
 	frame_t *input_frame  = create_frame(input_format,         frame_width, frame_height);
-	frame_t *mid_frame    = create_frame(VIDEO_FORMAT_YUV444P, frame_width, frame_height);
+	frame_t *mid_frame    = create_frame(FRAME_FORMAT_YUV444P, frame_width, frame_height);
 	frame_t *output_frame = create_frame(output_format,        frame_width, frame_height);
 
 	// Open input/output files
@@ -190,14 +193,16 @@ int main(int argc, char *argv[]) {
 	FILE *output_file = fopen(output_filename, "wb");
 
 	// Loop through frames and perform format conversion
-	int frame_count = 0;
-	while (fread(input_frame->data, 1, sizeof_frame(input_frame), input_file) == sizeof_frame(input_frame)) {
-		if ((frame_count + 1) % 30 == 0) {
+	int frame_count = 0,
+	    input_frame_length  = sizeof_frame_data(input_frame),
+	    output_frame_length = sizeof_frame_data(output_frame);
+	while (fread(input_frame->data, 1, input_frame_length, input_file) == input_frame_length) {
+		if ((frame_count + 1) % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
 			printf("Encoding frame %i...\n", frame_count + 1);
 		}
 		convert_to_yuv444p(input_frame, mid_frame);
 		convert_from_yuv444p(mid_frame, output_frame);
-		fwrite(output_frame->data, 1, sizeof_frame(output_frame), output_file);
+		fwrite(output_frame->data, 1, output_frame_length, output_file);
 		frame_count++;
 	}
 

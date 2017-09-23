@@ -22,22 +22,24 @@ void gray16le_to_yuv444p(frame_t* src, frame_t* dst) {
 	assert(dst->format == FRAME_FORMAT_YUV444P);
 
 	const int num_pixels = src->width * src->height;
-	uint16_t *src_data = src->data;
-	uint8_t  *dst_data = dst->data;
+	uint16_t *src_y = src->plane[0];
+	uint8_t  *dst_y = src->plane[0];
+	uint8_t  *dst_u = src->plane[1];
+	uint8_t  *dst_v = src->plane[2];
 
 	// Luma
 	for (int i = 0; i < num_pixels; i++) {
-		dst_data[i] = (uint8_t) (src_data[i] >> 8);
+		dst_y[i] = (uint8_t) (src_y[i] >> 8);
 	}
 
 	// U (chroma)
 	for (int i = 0; i < num_pixels; i++) {
-		dst_data[num_pixels + i] = 0x80;
+		dst_u[i] = 0x80;
 	}
 
 	// V (chroma)
 	for (int i = 0; i < num_pixels; i++) {
-		dst_data[2 * num_pixels + i] = 0x80;
+		dst_v[i] = 0x80;
 	}
 }
 
@@ -52,13 +54,12 @@ void yuv444p_to_yuv422p(frame_t* src, frame_t* dst) {
 	assert(dst->format == FRAME_FORMAT_YUV422P);
 
 	const int num_pixels = src->width * src->height;
-	uint8_t *src_y = src->data;
-	uint8_t *src_u = &src_y[num_pixels]; /* skip num_pixels for Y plane */
-	uint8_t *src_v = &src_u[num_pixels]; /* skip num_pixels for U plane */
-	
-	uint8_t *dst_y = dst->data;
-	uint8_t *dst_u = &dst_y[num_pixels];     /* skip num_pixels   for Y plane */
-	uint8_t *dst_v = &dst_u[num_pixels / 2]; /* skip num_pixels/2 for U plane */
+	uint8_t *src_y = src->plane[0];
+	uint8_t *src_u = src->plane[1];
+	uint8_t *src_v = src->plane[2];
+	uint8_t *dst_y = dst->plane[0];
+	uint8_t *dst_u = dst->plane[1];
+	uint8_t *dst_v = dst->plane[2];
 
 	// Luma
 	memcpy(dst_y, src_y, num_pixels);
@@ -85,13 +86,12 @@ void yuv444p_to_yuv420p(frame_t* src, frame_t* dst) {
 	assert(dst->format == FRAME_FORMAT_YUV420P);
 
 	const int num_pixels = src->width * src->height;
-	uint8_t *src_y = src->data;
-	uint8_t *src_u = &src_y[num_pixels]; /* skip num_pixels for Y plane */
-	uint8_t *src_v = &src_u[num_pixels]; /* skip num_pixels for U plane */
-	
-	uint8_t *dst_y = dst->data;
-	uint8_t *dst_u = &dst_y[num_pixels];     /* skip num_pixels   for Y plane */
-	uint8_t *dst_v = &dst_u[num_pixels / 4]; /* skip num_pixels/4 for U plane */
+	uint8_t *src_y = src->plane[0];
+	uint8_t *src_u = src->plane[1];
+	uint8_t *src_v = src->plane[2];
+	uint8_t *dst_y = dst->plane[0];
+	uint8_t *dst_u = dst->plane[1];
+	uint8_t *dst_v = dst->plane[2];
 
 	// Y (luma)
 	memcpy(dst_y, src_y, num_pixels);

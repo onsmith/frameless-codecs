@@ -6,20 +6,54 @@
 #include "frame.h"
 
 
-frame_t* create_frame(const frame_format_t format, const int width, const int height) {
+frame_t* create_frame(const frame_format_t format, const int width, const int height, const int index) {
 	frame_t *frame = malloc(sizeof(frame_t));
 	frame->format = format;
 	frame->width  = width;
 	frame->height = height;
+	frame->index  = index;
 	frame->data = malloc(sizeof_frame_data(frame));
+	set_frame_plane_pointers(frame);
 	return frame;
-};
+}
+
+
+void set_frame_plane_pointers(frame_t* frame) {
+	const int pixel_count = frame->width * frame->height;
+	switch(frame->format) {
+	case (FRAME_FORMAT_GRAY16LE):
+		frame->plane[0] = frame->data;
+		frame->plane[1] = &((uint16_t*) frame->plane[0])[pixel_count];
+		frame->plane[2] = &((uint16_t*) frame->plane[1])[pixel_count];
+		break;
+	case (FRAME_FORMAT_YUV444P):
+		frame->plane[0] = frame->data;
+		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
+		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count];
+		break;
+	case (FRAME_FORMAT_YUV422P):
+		frame->plane[0] = frame->data;
+		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
+		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count / 2];
+		break;
+	case (FRAME_FORMAT_YUV420P):
+		frame->plane[0] = frame->data;
+		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
+		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count * 4];
+		break;
+	}
+}
+
+
+frame_t* create_frame(const frame_format_t format, const int width, const int height) {
+	return create_frame(format, width, height, 0);
+}
 
 
 void destroy_frame(frame_t* frame) {
 	free(frame->data);
 	free(frame);
-};
+}
 
 
 void copy_frame(const frame_t* src, frame_t* dst) {
@@ -27,7 +61,7 @@ void copy_frame(const frame_t* src, frame_t* dst) {
 	assert(src->height == dst->height);
 	assert(src->format == dst->format);
 	memcpy(dst->data, src->data, sizeof_frame_data(src));
-};
+}
 
 
 size_t sizeof_frame_data(const frame_t* frame) {

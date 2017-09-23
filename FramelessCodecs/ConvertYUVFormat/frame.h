@@ -18,15 +18,18 @@ typedef enum frame_format_t {
 ** Encapsulates a single frame of raw video data in a specified format.
 */
 typedef struct frame_t {
-	frame_format_t format;
-	int width, height;
-	void *data;
+	frame_format_t format; /* specifies the format of the data array */
+	int width, height;     /* width and height of the frame */
+	int index;             /* index of the frame within the video */
+	void *plane[3];        /* pointers to each plane in the data array */
+	void *data;            /* the data array */
 } frame_t;
 
 
 /*
-** Frame constructor.
+** Frame constructors.
 */
+frame_t* create_frame(const frame_format_t format, const int width, const int height, const int index);
 frame_t* create_frame(const frame_format_t format, const int width, const int height);
 
 

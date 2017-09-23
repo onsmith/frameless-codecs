@@ -184,9 +184,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Allocate frames
-	frame_t *input_frame  = create_frame(input_format,         frame_width, frame_height);
-	frame_t *mid_frame    = create_frame(FRAME_FORMAT_YUV444P, frame_width, frame_height);
-	frame_t *output_frame = create_frame(output_format,        frame_width, frame_height);
+	frame_t *input_frame  = create_frame(input_format,         frame_width, frame_height, 0);
+	frame_t *mid_frame    = create_frame(FRAME_FORMAT_YUV444P, frame_width, frame_height, 0);
+	frame_t *output_frame = create_frame(output_format,        frame_width, frame_height, 0);
 
 	// Open input/output files
 	FILE *input_file  = fopen(input_filename,  "rb");

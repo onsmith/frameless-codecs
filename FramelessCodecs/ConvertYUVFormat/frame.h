@@ -19,8 +19,8 @@ typedef enum frame_format_t {
 */
 typedef struct frame_t {
 	frame_format_t format; /* specifies the format of the data array */
-	int width, height;     /* width and height of the frame */
-	int index;             /* index of the frame within the video */
+	int width, height;     /* the width and height of the frame */
+	int index;             /* the index of the frame within the video */
 	void *plane[3];        /* pointers to each plane in the data array */
 	void *data;            /* the data array */
 } frame_t;
@@ -30,7 +30,6 @@ typedef struct frame_t {
 ** Frame constructors.
 */
 frame_t* create_frame(const frame_format_t format, const int width, const int height, const int index);
-frame_t* create_frame(const frame_format_t format, const int width, const int height);
 
 
 /*

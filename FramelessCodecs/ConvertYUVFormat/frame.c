@@ -6,18 +6,6 @@
 #include "frame.h"
 
 
-frame_t* create_frame(const frame_format_t format, const int width, const int height, const int index) {
-	frame_t *frame = malloc(sizeof(frame_t));
-	frame->format = format;
-	frame->width  = width;
-	frame->height = height;
-	frame->index  = index;
-	frame->data = malloc(sizeof_frame_data(frame));
-	set_frame_plane_pointers(frame);
-	return frame;
-}
-
-
 void set_frame_plane_pointers(frame_t* frame) {
 	const int pixel_count = frame->width * frame->height;
 	switch(frame->format) {
@@ -39,14 +27,21 @@ void set_frame_plane_pointers(frame_t* frame) {
 	case (FRAME_FORMAT_YUV420P):
 		frame->plane[0] = frame->data;
 		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
-		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count * 4];
+		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count / 4];
 		break;
 	}
 }
 
 
-frame_t* create_frame(const frame_format_t format, const int width, const int height) {
-	return create_frame(format, width, height, 0);
+frame_t* create_frame(const frame_format_t format, const int width, const int height, const int index) {
+	frame_t *frame = malloc(sizeof(frame_t));
+	frame->format = format;
+	frame->width  = width;
+	frame->height = height;
+	frame->index  = index;
+	frame->data = malloc(sizeof_frame_data(frame));
+	set_frame_plane_pointers(frame);
+	return frame;
 }
 
 

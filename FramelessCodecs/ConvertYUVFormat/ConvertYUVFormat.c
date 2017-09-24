@@ -27,7 +27,7 @@ void gray16le_to_yuv444p(frame_t* src, frame_t* dst) {
 	uint8_t  *dst_u = src->plane[1];
 	uint8_t  *dst_v = src->plane[2];
 
-	// Luma
+	// Y (luma)
 	for (int i = 0; i < num_pixels; i++) {
 		dst_y[i] = (uint8_t) (src_y[i] >> 8);
 	}
@@ -61,7 +61,7 @@ void yuv444p_to_yuv422p(frame_t* src, frame_t* dst) {
 	uint8_t *dst_u = dst->plane[1];
 	uint8_t *dst_v = dst->plane[2];
 
-	// Luma
+	// Y (luma)
 	memcpy(dst_y, src_y, num_pixels);
 
 	// U (chroma)

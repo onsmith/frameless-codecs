@@ -11,8 +11,8 @@ static void set_frame_planes(frame_t* frame) {
 	switch(frame->format) {
 	case (FRAME_FORMAT_GRAY16LE):
 		frame->plane[0] = frame->data;
-		frame->plane[1] = &((uint16_t*) frame->plane[0])[pixel_count];
-		frame->plane[2] = &((uint16_t*) frame->plane[1])[pixel_count];
+		frame->plane[1] = frame->data;
+		frame->plane[2] = frame->data;
 		break;
 	case (FRAME_FORMAT_YUV444P):
 		frame->plane[0] = frame->data;

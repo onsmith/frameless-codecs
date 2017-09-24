@@ -43,9 +43,9 @@ int main(int argc, char *argv[]) {
 	if (argc == 6) {
 		input_filename  = argv[1];
 		output_filename = argv[2];
-		map_filename    = argv[2];
-		frame_width     = atoi(argv[3]);
-		frame_height    = atoi(argv[4]);
+		map_filename    = argv[3];
+		frame_width     = atoi(argv[4]);
+		frame_height    = atoi(argv[5]);
 	}
 	else {
 		fprintf(stderr, "Incorrect number of arguments.\n");

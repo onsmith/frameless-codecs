@@ -6,7 +6,7 @@
 #include "frame.h"
 
 
-void set_frame_plane_pointers(frame_t* frame) {
+static void set_frame_planes(frame_t* frame) {
 	const int pixel_count = frame->width * frame->height;
 	switch(frame->format) {
 	case (FRAME_FORMAT_GRAY16LE):
@@ -40,7 +40,7 @@ frame_t* create_frame(const frame_format_t format, const int width, const int he
 	frame->height = height;
 	frame->index  = index;
 	frame->data = malloc(sizeof_frame_data(frame));
-	set_frame_plane_pointers(frame);
+	set_frame_planes(frame);
 	return frame;
 }
 

@@ -7,10 +7,10 @@
 */
 typedef enum frame_format_t {
 	FRAME_FORMAT_UNKNOWN,
-	FRAME_FORMAT_GRAY16LE,
-	FRAME_FORMAT_YUV420P,
-	FRAME_FORMAT_YUV422P,
-	FRAME_FORMAT_YUV444P
+	FRAME_FORMAT_GRAY16LE, /* 16 bits per value, luma only, little endian   */
+	FRAME_FORMAT_YUV420P,  /* 8 bits per value, yuv, 420 chroma subsampling */
+	FRAME_FORMAT_YUV422P,  /* 8 bits per value, yuv, 422 chroma subsampling */
+	FRAME_FORMAT_YUV444P   /* 8 bits per value, yuv, no chroma subsampling  */
 } frame_format_t;
 
 
@@ -18,11 +18,11 @@ typedef enum frame_format_t {
 ** Encapsulates a single frame of raw video data in a specified format.
 */
 typedef struct frame_t {
-	frame_format_t format; /* specifies the format of the data array */
-	int width, height;     /* the width and height of the frame */
-	int index;             /* the index of the frame within the video */
+	frame_format_t format; /* specifies the format of the data array   */
+	int width, height;     /* the width and height of the frame        */
+	int index;             /* the index of the frame within the video  */
 	void *plane[3];        /* pointers to each plane in the data array */
-	void *data;            /* the data array */
+	void *data;            /* the data array                           */
 } frame_t;
 
 

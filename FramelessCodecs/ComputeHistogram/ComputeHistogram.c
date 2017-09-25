@@ -5,9 +5,13 @@
 #include "stdint.h"
 
 
-// valid range is [1, 16]
-#define HIST_PIXEL_BIT_DEPTH 8
-#define HIST_LENGTH          (0x1 << HIST_PIXEL_BIT_DEPTH)
+#define INTENSITY_BIT_SHIFT 8
+#define INTENSITY_BIT_DEPTH 8
+#define HISTOGRAM_NUM_BINS  (0x1 << INTENSITY_BIT_DEPTH)
+
+
+typedef uint16_t hroi_intensity_t;
+typedef uint32_t histogram_frequency_t;
 
 
 /**
@@ -35,20 +39,18 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	// Allocate histogram, tracking parameters
-	int frame_size  = frame_width*frame_height,
-	    frame_count = 0;
-	uint32_t *histogram = calloc(HIST_LENGTH, sizeof(uint32_t));
+	// Allocate histogram
+	histogram_frequency_t *histogram = calloc(HISTOGRAM_NUM_BINS, sizeof(histogram_frequency_t));
 
 	// Open file, allocate buffer
-	uint16_t *frame = malloc(frame_size * sizeof(uint16_t));
+	unsigned int num_pixels = frame_width * frame_height;
+	hroi_intensity_t *frame_data = malloc(num_pixels * sizeof(hroi_intensity_t));
 	FILE *input_file = fopen(input_filename, "rb");
 
 	// Loop through file and accumulate histogram
-	while (fread(frame, sizeof(*frame), frame_size, input_file) == frame_size) {
-		frame_count++;
-		for (int i = 0; i < frame_size; i++) {
-			histogram[frame[i] >> (16 - HIST_PIXEL_BIT_DEPTH)]++;
+	while (fread(frame_data, sizeof(hroi_intensity_t), num_pixels, input_file) == num_pixels) {
+		for (int i = 0; i < num_pixels; i++) {
+			histogram[frame_data[i] >> INTENSITY_BIT_SHIFT]++;
 		}
 	}
 
@@ -56,18 +58,16 @@ int main(int argc, char *argv[]) {
 	fclose(input_file);
 
 	// Free frame memory
-	free(frame);
+	free(frame_data);
 
 	// Output results
-	for (int i = 0; i < HIST_LENGTH; i++) {
+	for (int i = 0; i < HISTOGRAM_NUM_BINS; i++) {
 		printf("%i\n", histogram[i]);
 	}
-	printf("%i frames analyzed.\n", frame_count);
 
 	// Free histogram memory
 	free(histogram);
 
 	// All done
-	system("pause");
 	return 0;
 }

@@ -15,15 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TransformIntensity.c">
+    <ClCompile Include="ComputeHistogramMatchingIntensityTransform.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="files.c">
+    <ClCompile Include="hroi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="files.h">
+    <Text Include="regions-of-interest.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hroi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -193,9 +193,9 @@ int main(int argc, char *argv[]) {
 	FILE *output_file = fopen(output_filename, "wb");
 
 	// Loop through frames and perform format conversion
-	int frame_count = 0,
-	    input_frame_length  = sizeof_frame_data(input_frame),
-	    output_frame_length = sizeof_frame_data(output_frame);
+	unsigned int frame_count = 0;
+	unsigned int input_frame_length  = sizeof_frame_data(input_frame),
+	             output_frame_length = sizeof_frame_data(output_frame);
 	while (fread(input_frame->data, 1, input_frame_length, input_file) == input_frame_length) {
 		if ((frame_count + 1) % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
 			printf("Encoding frame %i...\n", frame_count + 1);

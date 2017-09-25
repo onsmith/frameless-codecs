@@ -5,22 +5,23 @@
 #include "stdint.h"
 #include "stdio.h"
 
-#include "ConvertYUVFormat/frame.h"
+#include "files.h"
 
 
-#define OUTPUT_BIT_WIDTH            16
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
 
 
+typedef uint16_t input_intensity_t;
+typedef uint16_t output_intensity_t;
+
+
 /*
-** Internal routine to load the transformation map from a given file.
+** Internal routine to read the transformation map from a given file.
 */
-static uint16_t* load_map_from_file(const char* map_file_name) {
-	const int map_length = (0x1 << OUTPUT_BIT_WIDTH);
-	uint16_t *map = malloc(map_length * sizeof(uint16_t));
-	FILE *map_file = fopen(map_file_name, "rb");
-	fread(map_file, sizeof(uint16_t), map_length, map_file);
-	fclose(map_file);
+static output_intensity_t* read_map_file(const char* file_name) {
+	FILE *file = fopen(file_name, "rb");
+	output_intensity_t* map = read_entire_file(file);
+	fclose(file);
 	return map;
 }
 
@@ -54,10 +55,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Load map from file
-	uint16_t *map = load_map_from_file(map_filename);
+	output_intensity_t *map = read_map_file(map_filename);
 
-	// Allocate frames
-	frame_t *frame = create_frame(FRAME_FORMAT_GRAY16LE, frame_width, frame_height, 0);
+	// Allocate data arrays
+	const int num_pixels = frame_width * frame_height;
+	input_intensity_t  *input_data  = malloc(num_pixels * sizeof(input_intensity_t));
+	output_intensity_t *output_data = malloc(num_pixels * sizeof(output_intensity_t));
 
 	// Open input/output files
 	FILE *input_file  = fopen(input_filename,  "rb");
@@ -65,17 +68,14 @@ int main(int argc, char *argv[]) {
 
 	// Loop through frames and apply mapping
 	int frame_count = 0;
-	int num_pixels = frame_width * frame_height;
-	size_t frame_length = sizeof_frame_data(frame);
-	uint16_t *frame_data = frame->data;
-	while (fread(frame_data, 1, frame_length, input_file) == frame_length) {
+	while (fread(input_data, sizeof(input_intensity_t), num_pixels, input_file) == num_pixels) {
 		if ((frame_count + 1) % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
-			printf("Mapping frame %i...\n", frame_count + 1);
+			printf("Transforming frame %i...\n", frame_count + 1);
 		}
 		for (int i = 0; i < num_pixels; i++) {
-			frame_data[i] = map[frame_data[i]];
+			output_data[i] = map[input_data[i]];
 		}
-		fwrite(frame->data, 1, frame_length, output_file);
+		fwrite(output_data, sizeof(output_intensity_t), num_pixels, output_file);
 		frame_count++;
 	}
 
@@ -84,8 +84,9 @@ int main(int argc, char *argv[]) {
 	fclose(output_file);
 
 	// Free memory
-	destroy_frame(frame);
 	free(map);
+	free(input_data);
+	free(output_data);
 
 	// Report results
 	printf("%i frames successfully transformed.\n", frame_count);

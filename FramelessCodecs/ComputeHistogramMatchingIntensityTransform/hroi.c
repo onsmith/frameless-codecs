@@ -3,8 +3,8 @@
 
 hroi_t* create_hroi(const hroi_percentage_t y_min,
                     const hroi_percentage_t y_max,
-                    const hroi_intensity_t x_min,
-                    const hroi_intensity_t x_max) {
+                    const hroi_intensity_t  x_min,
+                    const hroi_intensity_t  x_max) {
 	hroi_t* roi = malloc(sizeof(hroi_t));
 	roi->y_min = y_min;
 	roi->y_max = y_max;

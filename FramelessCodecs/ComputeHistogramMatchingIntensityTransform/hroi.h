@@ -20,8 +20,8 @@ typedef struct hroi_t {
 */
 hroi_t* create_hroi(const hroi_percentage_t y_min,
                     const hroi_percentage_t y_max,
-                    const hroi_intensity_t x_min,
-                    const hroi_intensity_t x_max);
+                    const hroi_intensity_t  x_min,
+                    const hroi_intensity_t  x_max);
 
 
 /*

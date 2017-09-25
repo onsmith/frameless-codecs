@@ -18,7 +18,7 @@ static histogram_bin_t* read_histogram_file(const char* filename) {
 	FILE *file = fopen(filename, "r");
 	unsigned int allocated_elements = 8;
 	histogram_bin_t *histogram = malloc(allocated_elements * sizeof(histogram_bin_t));
-	for (int i = 0, value_buffer; fscanf(file, "%d", &value_buffer) != 0; i++) {
+	for (int i = 0, value_buffer; fscanf(file, "%d", &value_buffer) == 1; i++) {
 		while (i >= allocated_elements) {
 			allocated_elements *= 2;
 			histogram = realloc(histogram, allocated_elements * sizeof(histogram_bin_t));
@@ -46,6 +46,9 @@ void validate_rois(const hroi_intensity_t** rois, unsigned int number_of_rois) {
 		percentage_of_intensities_specified += rois[i][0];
 	}
 }
+
+
+
 
 
 /**
@@ -79,8 +82,27 @@ int main(int argc, char *argv[]) {
 
 
 	// Read roi file
+	FILE *roi_file = fopen(roi_filename, "r");
+	unsigned int num_hrois, allocated_hrois = 8;
+	hroi_t **hrois = malloc(allocated_hrois * sizeof(hroi_t*));
+	hroi_t  *hroi  = malloc(sizeof(hroi_t));
+	for (num_hrois = 0; fscanf(roi_file, "%f %f %f %f", &hroi->y_min, &hroi->y_max, &hroi->x_min, &hroi->x_max) != 4; num_hrois++) {
+		while (num_hrois+2 >= allocated_hrois) {
+			allocated_hrois *= 2;
+			hrois = realloc(hrois, allocated_hrois * sizeof(hroi_t*));
+		}
+		hrois[num_hrois] = malloc(sizeof(hroi_t));
+		copy_hroi(hroi, hrois[num_hrois]);
+	}
+	free(hroi);
+	fclose(roi_file);
 
-	//
+	// Free memory
+	for (int i=0; i<num_hrois; i++) {
+		free(hrois[i]);
+	}
+	free(hrois);
+	free(histogram);
 
 	// All done
 	return 0;

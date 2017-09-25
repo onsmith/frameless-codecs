@@ -11,7 +11,7 @@
 
 
 typedef uint16_t hroi_intensity_t;
-typedef uint32_t histogram_frequency_t;
+typedef uint32_t histogram_bin_t;
 
 
 /**
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Allocate histogram
-	histogram_frequency_t *histogram = calloc(HISTOGRAM_NUM_BINS, sizeof(histogram_frequency_t));
+	histogram_bin_t *histogram = calloc(HISTOGRAM_NUM_BINS, sizeof(histogram_bin_t));
 
 	// Open file, allocate buffer
 	unsigned int num_pixels = frame_width * frame_height;

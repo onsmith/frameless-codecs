@@ -8,13 +8,26 @@
 #include "hroi.h"
 
 
-typedef uint32_t histogram_frequency_t;
+typedef uint32_t histogram_bin_t;
 
 
 /*
-** Internal method to read a file specifying the regions of interest.
+** Internal method to read a histogram file.
 */
-
+static histogram_bin_t* read_histogram_file(const char* filename) {
+	FILE *file = fopen(filename, "r");
+	unsigned int allocated_elements = 8;
+	histogram_bin_t *histogram = malloc(allocated_elements * sizeof(histogram_bin_t));
+	for (int i = 0, value_buffer; fscanf(file, "%d", &value_buffer) != 0; i++) {
+		while (i >= allocated_elements) {
+			allocated_elements *= 2;
+			histogram = realloc(histogram, allocated_elements * sizeof(histogram_bin_t));
+		}
+		histogram[i] = value_buffer;
+	}
+	fclose(file);
+	return histogram;
+}
 
 
 /*
@@ -62,17 +75,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Read histogram file
-	FILE *histogram_file = fopen(histogram_filename, "r");
-	unsigned int histogram_size     = 0,
-	             histogram_max_size = 8;
-	histogram_frequency_t *histogram = malloc(histogram_max_size * sizeof(histogram_frequency_t));
-	int count;
-	while (fscanf(histogram_file, "%d", &count) != 0) {
-		histogram_size++;
-		if (histogram_size == histogram_max_size) {
-		}
-	}
-	fclose(histogram_file);
+	histogram_bin_t *histogram = read_histogram_file(histogram_filename);
 
 
 	// Read roi file

@@ -168,18 +168,21 @@ int main(int argc, char *argv[]) {
 	else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
 		print_usage(argv[0]);
+		system("pause");
 		exit(1);
 	}
 
 	// Validate input and output formats
 	if (input_format != FRAME_FORMAT_GRAY16LE && input_format != FRAME_FORMAT_YUV444P) {
-		fprintf(stderr, "Unrecognized input format.\n");
+		fprintf(stderr, "Unrecognized input format: %s\n", argv[5]);
 		fprintf(stderr, "Valid values are: gray16le, yuv444p\n");
+		system("pause");
 		exit(1);
 	}
 	if (output_format == FRAME_FORMAT_GRAY16LE || output_format == FRAME_FORMAT_UNKNOWN) {
-		fprintf(stderr, "Unrecognized output format.\n");
+		fprintf(stderr, "Unrecognized output format: %s\n", argv[6]);
 		fprintf(stderr, "Valid values are: yuv420p, yuv422p, yuv444p\n");
+		system("pause");
 		exit(1);
 	}
 
@@ -190,7 +193,17 @@ int main(int argc, char *argv[]) {
 
 	// Open input/output files
 	FILE *input_file  = fopen(input_filename,  "rb");
+	if (input_file == NULL) {
+		fprintf(stderr, "Could not open input video file for reading.\n");
+		system("pause");
+		exit(1);
+	}
 	FILE *output_file = fopen(output_filename, "wb");
+	if (output_file == NULL) {
+		fprintf(stderr, "Could not open output video file for writing.\n");
+		system("pause");
+		exit(1);
+	}
 
 	// Loop through frames and perform format conversion
 	unsigned int frame_count = 0;

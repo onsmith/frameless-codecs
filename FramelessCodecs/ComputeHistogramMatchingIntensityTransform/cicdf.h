@@ -2,8 +2,8 @@
 #define CICDF_H
 
 
-typedef float cicdf_percentage_t;
-typedef float cocdf_intensity_t;
+typedef double cicdf_percentage_t;
+typedef double cicdf_intensity_t;
 
 
 /*
@@ -12,7 +12,7 @@ typedef float cocdf_intensity_t;
 */
 typedef struct cicdf_region_t {
 	cicdf_percentage_t min_percentage, max_percentage;
-	cocdf_intensity_t  min_intensity, max_intensity;
+	cicdf_intensity_t  min_intensity, max_intensity;
 } cicdf_region_t;
 
 
@@ -21,8 +21,8 @@ typedef struct cicdf_region_t {
 */
 cicdf_region_t* create_cicdf_region(const cicdf_percentage_t min_percentage,
                                     const cicdf_percentage_t max_percentage,
-                                    const cocdf_intensity_t  min_intensity,
-                                    const cocdf_intensity_t  max_intensity);
+                                    const cicdf_intensity_t  min_intensity,
+                                    const cicdf_intensity_t  max_intensity);
 
 
 /*
@@ -63,10 +63,18 @@ void destroy_cicdf(cicdf_t* hroi_cdf);
 /*
 ** Adds a new region to a cicdf.
 */
-void add_region_to_cicdf(cicdf_t* cicdf, cicdf_region_t* region);
+void add_region_to_cicdf(cicdf_t* cicdf,
+	const cicdf_percentage_t min_percentage,
+	const cicdf_percentage_t max_percentage,
+	const cicdf_intensity_t  min_intensity,
+	const cicdf_intensity_t  max_intensity);
 
 
-cocdf_intensity_t calculate_hroi_intensity(cicdf_t* hroi_cdf, cicdf_percentage_t percentage);
+/*
+** Looks up the intensity corresponding to a given percentage for a given
+**   cicdf.
+*/
+cicdf_intensity_t inverse_cicdf(cicdf_t* cicdf, cicdf_percentage_t percentage);
 
 
 #endif

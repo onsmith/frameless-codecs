@@ -26,6 +26,9 @@
     <Text Include="regions-of-interest.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="intensity-transform.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cicdf.h">

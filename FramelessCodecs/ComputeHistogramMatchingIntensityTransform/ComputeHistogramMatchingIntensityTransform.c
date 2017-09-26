@@ -8,6 +8,8 @@
 #include "cicdf.h"
 
 
+#define HISTOGRAM_SIZE (0x1 << 8)
+
 typedef uint32_t histogram_bin_t;
 
 
@@ -16,39 +18,13 @@ typedef uint32_t histogram_bin_t;
 */
 static histogram_bin_t* read_histogram_file(const char* filename) {
 	FILE *file = fopen(filename, "r");
-	unsigned int num_allocated_regions = 8;
-	histogram_bin_t *histogram = malloc(num_allocated_regions * sizeof(histogram_bin_t));
-	for (int i = 0, value_buffer; fscanf(file, "%d", &value_buffer) == 1; i++) {
-		while (i >= num_allocated_regions) {
-			num_allocated_regions *= 2;
-			histogram = realloc(histogram, num_allocated_regions * sizeof(histogram_bin_t));
-		}
-		histogram[i] = value_buffer;
+	histogram_bin_t *histogram = malloc(HISTOGRAM_SIZE * sizeof(histogram_bin_t));
+	for (int i = 0, buffer; i < HISTOGRAM_SIZE && fscanf(file, "%d", &buffer) == 1; i++) {
+		histogram[i] = buffer;
 	}
 	fclose(file);
 	return histogram;
 }
-
-
-/*
-** Validates the passed array specifying the histogram regions of interest.
-*/
-void validate_rois(const cocdf_intensity_t** rois, unsigned int number_of_rois) {
-	cicdf_percentage_t percentage_of_intensities_specified = 0.0F;
-	cocdf_intensity_t max_intensity_specified = 0.0F;
-	for (int i=0; i<number_of_rois; i++) {
-		assert(0.0F <= rois[i][0]);                                       /* percentage of pixels in roi must be nonnegative */
-		assert(rois[i][0] + percentage_of_intensities_specified <= 0.1F); /* can't specify more than 100% of pixels          */
-		assert(max_intensity_specified <= rois[i][1]);                    /* can't overlap intensity regions                 */
-		assert(rois[i][1] < rois[i][2]);                                  /* smaller intensity coordinate must come first    */
-		assert(rois[i][2] <= 1.0F);                                       /* can't specify intensity region above 1.0F       */
-		max_intensity_specified = rois[i][2];
-		percentage_of_intensities_specified += rois[i][0];
-	}
-}
-
-
-
 
 
 /**
@@ -80,31 +56,63 @@ int main(int argc, char *argv[]) {
 	// Read histogram file
 	histogram_bin_t *histogram = read_histogram_file(histogram_filename);
 
+	// Convert histogram to cdf
+	cicdf_percentage_t *cdf = malloc(HISTOGRAM_SIZE * sizeof(cicdf_percentage_t));
+	cdf[0] = histogram[0];
+	for (int i = 1; i < HISTOGRAM_SIZE; i++) {
+		cdf[i] = cdf[i-1] + histogram[i];
+	}
+	const cicdf_percentage_t largest_cdf_bin = cdf[HISTOGRAM_SIZE-1];
+	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
+		cdf[i] = cdf[i] / largest_cdf_bin;
+	}
+
+	// Free histogram; we don't need it anymore
+	free(histogram);
 
 	// Read cicdf file
 	FILE *cicdf_file = fopen(cicdf_filename, "r");
 	cicdf_t *cicdf = create_cicdf();
-	cicdf_region_t *region = create_cicdf_region(0, 0, 0, 0);
-	while (fscanf(cicdf_file, "%f %f %f %f", &region->min_percentage, &region->max_percentage, &region->min_intensity, &region->max_intensity) != 4) {
+	cicdf_region_t region;
+	while (fscanf(cicdf_file, "%lf %lf %lf %lf", &region.min_percentage, &region.max_percentage, &region.min_intensity, &region.max_intensity) == 4) {
 		if (cicdf->num_regions == 0) {
-			if (region->min_intensity > 0 && region->min_percentage > 0) {
-				add_region_to_cicdf(cicdf, create_cicdf_region(0, region->min_percentage, 0, region->min_intensity));
+			if (region.min_intensity > 0.0F || region.min_percentage > 0.0F) {
+				add_region_to_cicdf(cicdf, 0.0F, region.min_percentage, 0.0F, region.min_intensity);
 			}
 		} else {
-			const cicdf_region_t *prior_hroi = cicdf->regions[cicdf->num_regions];
-			if (prior_hroi->max_percentage < region->min_percentage || prior_hroi->max_intensity < region->min_intensity) {
-				add_region_to_cicdf(cicdf, create_cicdf_region(prior_hroi->max_percentage, region->min_percentage, prior_hroi->max_intensity, region->min_intensity));
+			const cicdf_region_t *prev_region = cicdf->regions[cicdf->num_regions - 1];
+			if (prev_region->max_percentage < region.min_percentage || prev_region->max_intensity < region.min_intensity) {
+				add_region_to_cicdf(cicdf, prev_region->max_percentage, region.min_percentage, prev_region->max_intensity, region.min_intensity);
 			}
 		}
-		add_region_to_cicdf(cicdf, region);
-		region = create_cicdf_region(0, 0, 0, 0);
+		add_region_to_cicdf(cicdf, region.min_percentage, region.max_percentage, region.min_intensity, region.max_intensity);
 	}
-	free(region);
 	fclose(cicdf_file);
+
+	// Complete the cicdf
+	if (cicdf->num_regions == 0) {
+		add_region_to_cicdf(cicdf, 0.0F, 1.0F, 0.0F, 1.0F);
+	} else if (region.max_percentage < 1.0F || region.max_intensity < 1.0F) {
+		add_region_to_cicdf(cicdf, region.max_percentage, 1.0F, region.max_intensity, 1.0F);
+	}
+
+	// Perform histogram matching
+	cicdf_intensity_t *intensity_map = malloc(HISTOGRAM_SIZE * sizeof(cicdf_intensity_t));
+	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
+		intensity_map[i] = inverse_cicdf(cicdf, cdf[i]);
+	}
+
+	// Write results to file
+	FILE *output_file = fopen(output_filename, "w");
+	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
+		fprintf(output_file, "%0.70lf\n", intensity_map[i]);
+	}
+	fclose(output_file);
 
 	// Free memory
 	destroy_cicdf(cicdf);
-	free(histogram);
+	free(cdf);
+	free(intensity_map);
 
 	// All done
 	return 0;

@@ -36,4 +36,35 @@ void destroy_hroi(hroi_t* roi);
 void copy_hroi(const hroi_t* src, hroi_t* dst);
 
 
+/*
+** Encapsulates a collection of hrois.
+*/
+typedef struct hroi_cdf_t {
+	hroi_t **data;
+	unsigned int allocated_elements;
+	unsigned int num_hrois;
+} hroi_cdf_t;
+
+
+/*
+** Hroi_cdf constructor.
+*/
+hroi_cdf_t* create_hroi_cdf();
+
+
+/*
+** Hroi destructor.
+*/
+void destroy_hroi_cdf(hroi_cdf_t* hroi_cdf);
+
+
+/*
+** Adds a new hroi to a hroi_cdf.
+*/
+void add_to_hroi_cdf(hroi_cdf_t* hroi_cdf, hroi_t* hroi);
+
+
+hroi_intensity_t calculate_hroi_intensity(hroi_cdf_t* hroi_cdf, hroi_percentage_t percentage);
+
+
 #endif

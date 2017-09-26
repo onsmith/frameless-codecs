@@ -83,25 +83,30 @@ int main(int argc, char *argv[]) {
 
 	// Read roi file
 	FILE *roi_file = fopen(roi_filename, "r");
-	unsigned int num_hrois, allocated_hrois = 8;
-	hroi_t **hrois = malloc(allocated_hrois * sizeof(hroi_t*));
-	hroi_t  *hroi  = malloc(sizeof(hroi_t));
-	for (num_hrois = 0; fscanf(roi_file, "%f %f %f %f", &hroi->y_min, &hroi->y_max, &hroi->x_min, &hroi->x_max) != 4; num_hrois++) {
-		while (num_hrois+2 >= allocated_hrois) {
-			allocated_hrois *= 2;
-			hrois = realloc(hrois, allocated_hrois * sizeof(hroi_t*));
+	hroi_cdf_t *hroi_cdf = create_hroi_cdf();
+	hroi_t *hroi = create_hroi(0, 0, 0, 0);
+	while (fscanf(roi_file, "%f %f %f %f", &hroi->y_min, &hroi->y_max, &hroi->x_min, &hroi->x_max) != 4) {
+		if (hroi_cdf->num_hrois == 0) {
+			if (hroi->x_min > 0 && hroi->y_min > 0) {
+				add_to_hroi_cdf(hroi_cdf, create_hroi(0, hroi->y_min, 0, hroi->x_min));
+			}
+		} else {
+			const hroi_t *prior_hroi = hroi_cdf->data[hroi_cdf->num_hrois];
+			if (prior_hroi->y_max < hroi->y_min || prior_hroi->x_max < hroi->x_min) {
+				add_to_hroi_cdf(hroi_cdf, create_hroi(prior_hroi->y_max, hroi->y_min, prior_hroi->x_max, hroi->x_min));
+			}
 		}
-		hrois[num_hrois] = malloc(sizeof(hroi_t));
-		copy_hroi(hroi, hrois[num_hrois]);
+		add_to_hroi_cdf(hroi_cdf, hroi);
+		hroi = create_hroi(0, 0, 0, 0);
 	}
 	free(hroi);
 	fclose(roi_file);
 
 	// Free memory
 	for (int i=0; i<num_hrois; i++) {
-		free(hrois[i]);
+		free(data[i]);
 	}
-	free(hrois);
+	free(data);
 	free(histogram);
 
 	// All done

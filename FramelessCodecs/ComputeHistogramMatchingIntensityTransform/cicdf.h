@@ -71,7 +71,7 @@ void add_region_to_cicdf(cicdf_t* cicdf,
 
 
 /*
-** Looks up the intensity corresponding to a given percentage for a given
+** Computes the intensity corresponding to a given percentage for a given
 **   cicdf.
 */
 cicdf_intensity_t inverse_cicdf(cicdf_t* cicdf, cicdf_percentage_t percentage);

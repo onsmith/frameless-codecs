@@ -71,11 +71,19 @@ void add_region_to_cicdf(cicdf_t* cicdf,
 }
 
 
+/*
+** Evaluates a cubic function with given coefficients at a given point.
+*/
 static inline double evaluate_cubic(const double a, const double b, const double c, const double d, const double x) {
 	return a*x*x*x + b*x*x + c*x + d;
 }
 
 
+/*
+** Uses a binary search algorithm to find the zero of a given cubic function.
+**   The cubic specified must (1) have a zero in the range specified and must
+**   (2) be monotonically increasing in the range specified.
+*/
 static double find_cubic_zero(const double a, const double b, const double c, const double d, const double x_min, const double x_max) {
 	const double x_mid = (x_min + x_max) / 2;
 	const double y_mid = evaluate_cubic(a, b, c, d, x_mid);
@@ -89,6 +97,11 @@ static double find_cubic_zero(const double a, const double b, const double c, co
 }
 
 
+/*
+** These functions calculate the four coefficients of a cubic function going
+**   through the points p0 = (x0, y0) and p1 = (x1, y1) with derivative d0 at
+**   point p0 and derivative d1 at point p1.
+*/
 static inline double a3(const double x0, const double y0, const double x1, const double y1, const double d0, const double d1) {
 	return (d0*(x0 - x1) + d1*(x0 - x1) - 2*(y0 - y1)) / pow(x0 - x1, 3);
 }
@@ -106,6 +119,10 @@ static inline double a0(const double x0, const double y0, const double x1, const
 }
 
 
+/*
+** Computes the intensity corresponding to a given percentage for a given
+**   cicdf region.
+*/
 static cicdf_intensity_t inverse_cicdf_region(cicdf_region_t* region, cicdf_percentage_t percentage) {
 	cicdf_percentage_t midpoint_percentage = (region->max_percentage + region->min_percentage) / 2;
 	cicdf_percentage_t midpoint_intensity  = (region->max_intensity  + region->min_intensity ) / 2;

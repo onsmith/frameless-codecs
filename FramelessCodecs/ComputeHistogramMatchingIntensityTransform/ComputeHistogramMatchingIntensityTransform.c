@@ -31,7 +31,7 @@ static histogram_bin_t* read_histogram_file(const char* filename) {
  * Prints the program usage to the standard output stream.
  */
 static void print_usage(char *filename) {
-	printf("Usage: %s histogram-filename cicdf-filename output-filename \n", filename);
+	printf("Usage: %s histogram-filename cicdf-filename \n", filename);
 }
 
 
@@ -41,15 +41,14 @@ static void print_usage(char *filename) {
 int main(int argc, char *argv[]) {
 	// Parse arguments
 	char *histogram_filename,
-	     *cicdf_filename,
-	     *output_filename;
-	if (argc == 4) {
+	     *cicdf_filename;
+	if (argc == 3) {
 		histogram_filename = argv[1];
 		cicdf_filename     = argv[2];
-		output_filename    = argv[3];
 	} else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
 		print_usage(argv[0]);
+		system("pause");
 		exit(1);
 	}
 
@@ -102,12 +101,11 @@ int main(int argc, char *argv[]) {
 		intensity_map[i] = inverse_cicdf(cicdf, cdf[i]);
 	}
 
-	// Write results to file
-	FILE *output_file = fopen(output_filename, "w");
+	// Output results 
 	for (int i = 0; i < HISTOGRAM_SIZE; i++) {
-		fprintf(output_file, "%0.70lf\n", intensity_map[i]);
+		//printf("%d\n", (int) (intensity_map[i] * 255));
+		printf("%.70lf\n", intensity_map[i]);
 	}
-	fclose(output_file);
 
 	// Free memory
 	destroy_cicdf(cicdf);

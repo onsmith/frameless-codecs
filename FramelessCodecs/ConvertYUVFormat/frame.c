@@ -10,22 +10,22 @@ static void set_frame_planes(frame_t* frame) {
 	const int pixel_count = frame->width * frame->height;
 	switch(frame->format) {
 	case (FRAME_FORMAT_GRAY16LE):
-		frame->plane[0] = frame->data;
-		frame->plane[1] = frame->data;
-		frame->plane[2] = frame->data;
+		frame->plane[0] = frame->regions;
+		frame->plane[1] = frame->regions;
+		frame->plane[2] = frame->regions;
 		break;
 	case (FRAME_FORMAT_YUV444P):
-		frame->plane[0] = frame->data;
+		frame->plane[0] = frame->regions;
 		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
 		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count];
 		break;
 	case (FRAME_FORMAT_YUV422P):
-		frame->plane[0] = frame->data;
+		frame->plane[0] = frame->regions;
 		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
 		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count / 2];
 		break;
 	case (FRAME_FORMAT_YUV420P):
-		frame->plane[0] = frame->data;
+		frame->plane[0] = frame->regions;
 		frame->plane[1] = &((uint8_t*) frame->plane[0])[pixel_count];
 		frame->plane[2] = &((uint8_t*) frame->plane[1])[pixel_count / 4];
 		break;
@@ -39,14 +39,14 @@ frame_t* create_frame(const frame_format_t format, const int width, const int he
 	frame->width  = width;
 	frame->height = height;
 	frame->index  = index;
-	frame->data = malloc(sizeof_frame_data(frame));
+	frame->regions = malloc(sizeof_frame_data(frame));
 	set_frame_planes(frame);
 	return frame;
 }
 
 
 void destroy_frame(frame_t* frame) {
-	free(frame->data);
+	free(frame->regions);
 	free(frame);
 }
 
@@ -55,7 +55,7 @@ void copy_frame(const frame_t* src, frame_t* dst) {
 	assert(src->width  == dst->width);
 	assert(src->height == dst->height);
 	assert(src->format == dst->format);
-	memcpy(dst->data, src->data, sizeof_frame_data(src));
+	memcpy(dst->regions, src->regions, sizeof_frame_data(src));
 }
 
 

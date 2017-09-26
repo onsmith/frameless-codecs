@@ -5,7 +5,7 @@
 #include "stdint.h"
 #include "assert.h"
 
-#include "hroi.h"
+#include "cicdf.h"
 
 
 typedef uint32_t histogram_bin_t;
@@ -16,12 +16,12 @@ typedef uint32_t histogram_bin_t;
 */
 static histogram_bin_t* read_histogram_file(const char* filename) {
 	FILE *file = fopen(filename, "r");
-	unsigned int allocated_elements = 8;
-	histogram_bin_t *histogram = malloc(allocated_elements * sizeof(histogram_bin_t));
+	unsigned int num_allocated_regions = 8;
+	histogram_bin_t *histogram = malloc(num_allocated_regions * sizeof(histogram_bin_t));
 	for (int i = 0, value_buffer; fscanf(file, "%d", &value_buffer) == 1; i++) {
-		while (i >= allocated_elements) {
-			allocated_elements *= 2;
-			histogram = realloc(histogram, allocated_elements * sizeof(histogram_bin_t));
+		while (i >= num_allocated_regions) {
+			num_allocated_regions *= 2;
+			histogram = realloc(histogram, num_allocated_regions * sizeof(histogram_bin_t));
 		}
 		histogram[i] = value_buffer;
 	}
@@ -33,9 +33,9 @@ static histogram_bin_t* read_histogram_file(const char* filename) {
 /*
 ** Validates the passed array specifying the histogram regions of interest.
 */
-void validate_rois(const hroi_intensity_t** rois, unsigned int number_of_rois) {
-	hroi_percentage_t percentage_of_intensities_specified = 0.0F;
-	hroi_intensity_t max_intensity_specified = 0.0F;
+void validate_rois(const cocdf_intensity_t** rois, unsigned int number_of_rois) {
+	cicdf_percentage_t percentage_of_intensities_specified = 0.0F;
+	cocdf_intensity_t max_intensity_specified = 0.0F;
 	for (int i=0; i<number_of_rois; i++) {
 		assert(0.0F <= rois[i][0]);                                       /* percentage of pixels in roi must be nonnegative */
 		assert(rois[i][0] + percentage_of_intensities_specified <= 0.1F); /* can't specify more than 100% of pixels          */
@@ -55,7 +55,7 @@ void validate_rois(const hroi_intensity_t** rois, unsigned int number_of_rois) {
  * Prints the program usage to the standard output stream.
  */
 static void print_usage(char *filename) {
-	printf("Usage: %s histogram-filename roi-filename output-filename \n", filename);
+	printf("Usage: %s histogram-filename cicdf-filename output-filename \n", filename);
 }
 
 
@@ -65,11 +65,11 @@ static void print_usage(char *filename) {
 int main(int argc, char *argv[]) {
 	// Parse arguments
 	char *histogram_filename,
-	     *roi_filename,
+	     *cicdf_filename,
 	     *output_filename;
 	if (argc == 4) {
 		histogram_filename = argv[1];
-		roi_filename       = argv[2];
+		cicdf_filename     = argv[2];
 		output_filename    = argv[3];
 	} else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
@@ -81,32 +81,29 @@ int main(int argc, char *argv[]) {
 	histogram_bin_t *histogram = read_histogram_file(histogram_filename);
 
 
-	// Read roi file
-	FILE *roi_file = fopen(roi_filename, "r");
-	hroi_cdf_t *hroi_cdf = create_hroi_cdf();
-	hroi_t *hroi = create_hroi(0, 0, 0, 0);
-	while (fscanf(roi_file, "%f %f %f %f", &hroi->y_min, &hroi->y_max, &hroi->x_min, &hroi->x_max) != 4) {
-		if (hroi_cdf->num_hrois == 0) {
-			if (hroi->x_min > 0 && hroi->y_min > 0) {
-				add_to_hroi_cdf(hroi_cdf, create_hroi(0, hroi->y_min, 0, hroi->x_min));
+	// Read cicdf file
+	FILE *cicdf_file = fopen(cicdf_filename, "r");
+	cicdf_t *cicdf = create_cicdf();
+	cicdf_region_t *region = create_cicdf_region(0, 0, 0, 0);
+	while (fscanf(cicdf_file, "%f %f %f %f", &region->min_percentage, &region->max_percentage, &region->min_intensity, &region->max_intensity) != 4) {
+		if (cicdf->num_regions == 0) {
+			if (region->min_intensity > 0 && region->min_percentage > 0) {
+				add_region_to_cicdf(cicdf, create_cicdf_region(0, region->min_percentage, 0, region->min_intensity));
 			}
 		} else {
-			const hroi_t *prior_hroi = hroi_cdf->data[hroi_cdf->num_hrois];
-			if (prior_hroi->y_max < hroi->y_min || prior_hroi->x_max < hroi->x_min) {
-				add_to_hroi_cdf(hroi_cdf, create_hroi(prior_hroi->y_max, hroi->y_min, prior_hroi->x_max, hroi->x_min));
+			const cicdf_region_t *prior_hroi = cicdf->regions[cicdf->num_regions];
+			if (prior_hroi->max_percentage < region->min_percentage || prior_hroi->max_intensity < region->min_intensity) {
+				add_region_to_cicdf(cicdf, create_cicdf_region(prior_hroi->max_percentage, region->min_percentage, prior_hroi->max_intensity, region->min_intensity));
 			}
 		}
-		add_to_hroi_cdf(hroi_cdf, hroi);
-		hroi = create_hroi(0, 0, 0, 0);
+		add_region_to_cicdf(cicdf, region);
+		region = create_cicdf_region(0, 0, 0, 0);
 	}
-	free(hroi);
-	fclose(roi_file);
+	free(region);
+	fclose(cicdf_file);
 
 	// Free memory
-	for (int i=0; i<num_hrois; i++) {
-		free(data[i]);
-	}
-	free(data);
+	destroy_cicdf(cicdf);
 	free(histogram);
 
 	// All done

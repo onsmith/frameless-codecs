@@ -196,13 +196,13 @@ int main(int argc, char *argv[]) {
 	unsigned int frame_count = 0;
 	unsigned int input_frame_length  = sizeof_frame_data(input_frame),
 	             output_frame_length = sizeof_frame_data(output_frame);
-	while (fread(input_frame->data, 1, input_frame_length, input_file) == input_frame_length) {
+	while (fread(input_frame->regions, 1, input_frame_length, input_file) == input_frame_length) {
 		if ((frame_count + 1) % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
 			printf("Encoding frame %i...\n", frame_count + 1);
 		}
 		convert_to_yuv444p(input_frame, mid_frame);
 		convert_from_yuv444p(mid_frame, output_frame);
-		fwrite(output_frame->data, 1, output_frame_length, output_file);
+		fwrite(output_frame->regions, 1, output_frame_length, output_file);
 		frame_count++;
 	}
 

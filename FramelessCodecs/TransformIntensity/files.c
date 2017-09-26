@@ -11,9 +11,9 @@ long int fsize(FILE* file) {
 
 
 void* read_from_file(FILE* file, size_t num_bytes) {
-	void *data = malloc(num_bytes);
-	fread(data, 1, num_bytes, file);
-	return data;
+	void *regions = malloc(num_bytes);
+	fread(regions, 1, num_bytes, file);
+	return regions;
 }
 
 

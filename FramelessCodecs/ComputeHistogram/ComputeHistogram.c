@@ -10,7 +10,7 @@
 #define HISTOGRAM_NUM_BINS  (0x1 << INTENSITY_BIT_DEPTH)
 
 
-typedef uint16_t hroi_intensity_t;
+typedef uint16_t cocdf_intensity_t;
 typedef uint32_t histogram_bin_t;
 
 
@@ -44,11 +44,11 @@ int main(int argc, char *argv[]) {
 
 	// Open file, allocate buffer
 	unsigned int num_pixels = frame_width * frame_height;
-	hroi_intensity_t *frame_data = malloc(num_pixels * sizeof(hroi_intensity_t));
+	cocdf_intensity_t *frame_data = malloc(num_pixels * sizeof(cocdf_intensity_t));
 	FILE *input_file = fopen(input_filename, "rb");
 
 	// Loop through file and accumulate histogram
-	while (fread(frame_data, sizeof(hroi_intensity_t), num_pixels, input_file) == num_pixels) {
+	while (fread(frame_data, sizeof(cocdf_intensity_t), num_pixels, input_file) == num_pixels) {
 		for (int i = 0; i < num_pixels; i++) {
 			histogram[frame_data[i] >> INTENSITY_BIT_SHIFT]++;
 		}

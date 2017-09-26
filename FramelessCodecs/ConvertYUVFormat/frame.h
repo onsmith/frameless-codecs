@@ -22,7 +22,7 @@ typedef struct frame_t {
 	int width, height;     /* the width and height of the frame        */
 	int index;             /* the index of the frame within the video  */
 	void *plane[3];        /* pointers to each plane in the data array */
-	void *data;            /* the data array                           */
+	void *regions;            /* the data array                           */
 } frame_t;
 
 

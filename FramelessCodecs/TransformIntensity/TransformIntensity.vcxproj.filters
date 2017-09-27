@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TransformIntensity.c">
+    <ClCompile Include="files.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="files.c">
+    <ClCompile Include="transform-intensity.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

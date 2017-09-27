@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{E3AFF986-7A62-438C-B1B4-649A828F80CA}</ProjectGuid>
-    <RootNamespace>DownsampleVideo</RootNamespace>
+    <ProjectGuid>{96316164-48C4-4610-8727-A2F730A6BA67}</ProjectGuid>
+    <RootNamespace>MatchIntensityHistogram</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -111,6 +111,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cicdf.c" />
+    <ClCompile Include="match-intensity-histogram.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cicdf.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="intensity-transform.txt" />
+    <Text Include="regions-of-interest.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

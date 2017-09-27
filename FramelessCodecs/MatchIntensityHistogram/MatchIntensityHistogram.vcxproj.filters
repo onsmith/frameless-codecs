@@ -15,16 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConvertYUVFormat.c">
+    <ClCompile Include="cicdf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="frame.c">
+    <ClCompile Include="match-intensity-histogram.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="frame.h">
+    <ClInclude Include="cicdf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="intensity-transform.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="regions-of-interest.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

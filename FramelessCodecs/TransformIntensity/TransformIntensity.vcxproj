@@ -113,7 +113,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="files.c" />
-    <ClCompile Include="TransformIntensity.c" />
+    <ClCompile Include="transform-intensity.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="files.h" />

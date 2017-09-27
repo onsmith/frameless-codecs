@@ -15,23 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ComputeHistogramMatchingIntensityTransform.c">
+    <ClCompile Include="convert-frame-format.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cicdf.c">
+    <ClCompile Include="frame.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="regions-of-interest.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="intensity-transform.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cicdf.h">
+    <ClInclude Include="frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{D6105925-C3CD-4198-8397-105FEFB3215E}</ProjectGuid>
-    <RootNamespace>MatchHistogram</RootNamespace>
+    <ProjectGuid>{A245D04B-9F9B-4B16-AF47-4E350423032E}</ProjectGuid>
+    <RootNamespace>ComputeIntensityHistogram</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -111,6 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="compute-intensity-histogram.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

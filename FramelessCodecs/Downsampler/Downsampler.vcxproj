@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{E48A7077-DA90-45F2-BA76-2F06E2C8B922}</ProjectGuid>
-    <RootNamespace>DownsampleFrame</RootNamespace>
+    <ProjectGuid>{821C56FE-5C18-4F50-BF60-F9FB444611A8}</ProjectGuid>
+    <RootNamespace>Downsampler</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -111,6 +111,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Downsampler.cpp" />
+    <ClCompile Include="Gray16Frame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Gray16Frame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

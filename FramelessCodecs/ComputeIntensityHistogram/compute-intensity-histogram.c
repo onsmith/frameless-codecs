@@ -18,7 +18,7 @@ typedef uint32_t histogram_bin_t;
  * Prints the program usage to the standard output stream.
  */
 void print_usage(char *filename) {
-	printf("Usage: %s input-filename frame-width frame-height\n", filename);
+	printf("Usage: %s input-filename\n", filename);
 }
 
 
@@ -28,41 +28,34 @@ void print_usage(char *filename) {
 int main(int argc, char *argv[]) {
 	// Parse arguments
 	char *input_filename;
-	int frame_width, frame_height;
-	if (argc == 4) {
+	if (argc == 2) {
 		input_filename = argv[1];
-		frame_width    = atoi(argv[2]);
-		frame_height   = atoi(argv[3]);
 	} else {
 		fprintf(stderr, "Incorrect number of arguments.\n");
 		print_usage(argv[0]);
+		getchar();
 		exit(1);
 	}
 
 	// Allocate histogram
 	histogram_bin_t *histogram = calloc(HISTOGRAM_NUM_BINS, sizeof(histogram_bin_t));
 
-	// Open file, allocate buffer
-	unsigned int num_pixels = frame_width * frame_height;
-	intensity_t *frame_data = malloc(num_pixels * sizeof(intensity_t));
+	// Open file
 	FILE *input_file = fopen(input_filename, "rb");
 	if (input_file == NULL) {
-		fprintf(stderr, "Input file could not be opened.\n");
+		fprintf(stderr, "File could not be opened: %s\n", input_filename);
+		getchar();
 		exit(1);
 	}
 
-	// Loop through file and accumulate histogram
-	while (fread(frame_data, sizeof(intensity_t), num_pixels, input_file) == num_pixels) {
-		for (int i = 0; i < num_pixels; i++) {
-			histogram[frame_data[i] >> INTENSITY_BIT_SHIFT]++;
-		}
+	// Traverse file and accumulate histogram
+	intensity_t buffer;
+	while (fread(&buffer, sizeof(intensity_t), 1, input_file) == 1) {
+		histogram[buffer >> INTENSITY_BIT_SHIFT]++;
 	}
 
 	// Close file
 	fclose(input_file);
-
-	// Free frame memory
-	free(frame_data);
 
 	// Output results
 	for (int i = 0; i < HISTOGRAM_NUM_BINS; i++) {

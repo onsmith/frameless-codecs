@@ -9,6 +9,10 @@
 
 #include <iostream>
 #include <fstream>
+
+#include "Gray16Frame.h"
+
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -82,6 +86,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Downsample file
+	Gray16Frame input_frame();
 
 	// Close files
 	input_file.close();

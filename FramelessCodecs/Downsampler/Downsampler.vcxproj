@@ -112,10 +112,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Downsampler.cpp" />
-    <ClCompile Include="Gray16Frame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gray16Frame.h" />
+    <ClInclude Include="MonoFrame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

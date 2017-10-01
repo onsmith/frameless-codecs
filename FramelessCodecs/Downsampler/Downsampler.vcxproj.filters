@@ -18,12 +18,9 @@
     <ClCompile Include="Downsampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Gray16Frame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Gray16Frame.h">
+    <ClInclude Include="MonoFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

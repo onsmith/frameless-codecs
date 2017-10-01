@@ -9,26 +9,31 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstdint>
 
-#include "Gray16Frame.h"
+#include "MonoFrame.h"
 
 
 using std::cout;
 using std::cerr;
 using std::endl;
+using std::ostream;
 using std::ifstream;
 using std::ofstream;
 using std::ios;
 
 
+#define PRINT_UPDATE_EVERY_X_FRAMES 30
+
+
 /*
-** Prints the program usage to the standard output stream.
+** Prints the program usage to the given output stream.
 */
-void cout_usage(char* program_filename) {
-	cout << "Usage: "
-	     << program_filename
-	     << " input-filename output-filename input-frame-width input-frame-height"
-	     << endl;
+void print_usage(ostream& stream, char* program_filename) {
+	stream << "Usage: "
+	       << program_filename
+	       << " input-filename output-filename input-frame-width input-frame-height"
+	       << endl;
 }
 
 
@@ -39,7 +44,7 @@ int main(int argc, char *argv[]) {
 	// Check number of passed command line arguments
 	if (argc != 5) {
 		cerr << "Incorrect number of arguments." << endl;
-		cout_usage(argv[0]);
+		print_usage(cout, argv[0]);
 		getchar();
 		return 1;
 	}
@@ -85,13 +90,40 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	// Allocate frames
+	MonoFrame<uint16_t>  input_frame(input_frame_width,   input_frame_height  );
+	MonoFrame<uint16_t> output_frame(input_frame_width/2, input_frame_height/2);
+
 	// Downsample file
-	Gray16Frame input_frame();
+	int frame_count = 0;
+	while (input_frame.readFrom(input_file)) {
+		frame_count++;
+		if (frame_count % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
+			cout << "Downsampling frame number "
+				<< frame_count
+				<< endl;
+		}
+		for (int y = 0; y < input_frame_height/2; y++) {
+			for (int x = 0; x < input_frame_width/2; x++) {
+				output_frame(x, y) =
+					input_frame(2*x,   2*y  ) +
+					input_frame(2*x+1, 2*y  ) +
+					input_frame(2*x,   2*y+1) +
+					input_frame(2*x+1, 2*y+1);
+			}
+		}
+		output_frame.writeTo(output_file);
+	}
 
 	// Close files
 	input_file.close();
 	output_file.close();
 
 	// All done
+	cout << "Done! "
+		<< frame_count
+		<< " frames downsampled."
+		<< endl;
+	getchar();
 	return 0;
 }

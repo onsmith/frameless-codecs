@@ -1,188 +1,147 @@
 #pragma once
 
 
-#include <cassert>
-#include <cstring>
-#include <fstream>
+#include "Plane.h"
 
-
-using std::memcpy;
-using std::istream;
-using std::ostream;
+#include <algorithm>
+using std::copy;
 
 
 template <typename intensity_t>
 class MonoFrame {
 private:
 	/*
-	 ** The width and height of the frame.
-	 */
-	int const w, h;
+	** A MonoFrame encapsulates a single Plane object.
+	*/
+	Plane<intensity_t> plane;
+
 
 	/*
-	 ** Points to the memory holding the frame data.
+	 ** This object manages its own memory.
 	 */
-	intensity_t* const mem;
+	intensity_t* mem;
+
 
 public:
 	/*
-	** Gets the total number of pixels in the frame.
+	** Gets the width of the frame, in pixels.
 	*/
-	int numPixels() const;
+	int width() const {
+		return plane.width();
+	}
+
 
 	/*
 	** Gets the height of the frame, in pixels.
 	*/
-	int height() const;
+	int height() const {
+		return plane.height();
+	}
+
 
 	/*
-	** Gets the width of the frame, in pixels.
+	** Gets the total number of pixels in the frame.
 	*/
-	int width() const;
+	int numPixels() const {
+		return plane.numPixels();
+	}
+
 
 	/*
-	** Gets the total size of the frame data.
+	** Calculates the total number of intensity values stored in the plane.
 	*/
-	size_t sizeofData() const;
+	int size() const {
+		return numPixels();
+	}
+
 
 	/*
 	** Gets the underlying array of pixel intensity values.
 	*/
-	intensity_t* data() const;
+	intensity_t* data() const {
+		return mem;
+	}
+
 
 	/*
 	** Gets the intensity of the pixel located at position i, where pixels are
 	**   zero-indexed in row-major order starting from the top left of the frame.
 	*/
-	intensity_t& operator()(int i) const;
+	intensity_t& intensityAt(int i) const {
+		return plane.intensityAt(i);
+	}
+
 
 	/*
-	** Gets the intensity of the pixel located at position (x,y), where the
+	** Gets the intensity of the pixel located at position (x, y), where the
 	**   origin is located at the top left corner of the frame, and pixels are
 	**   zero-indexed.
 	*/
-	intensity_t& operator()(int x, int y) const;
-
-	/*
-	** Populates the frame's data using a given istream. Returns true if
-	**   successful.
-	*/
-	bool readFrom(istream&);
-
-	/*
-	** Writes the frame's data to a given output stream.
-	*/
-	void writeTo(ostream&);
-
-	/*
-	** Assignment operator.
-	*/
-	MonoFrame<intensity_t>& operator=(const MonoFrame<intensity_t>&);
-
-	/*
-	** Constructors.
-	*/
-	MonoFrame() = delete;
-	MonoFrame(const MonoFrame<intensity_t>&);
-	MonoFrame(int width, int height);
-	MonoFrame(int width, int height, intensity_t* mem);
-
-	/*
-	** Deconstructor.
-	*/
-	~MonoFrame();
-};
-
-
-template <typename intensity_t>
-inline int MonoFrame<intensity_t>::numPixels() const {
-	return w * h;
-}
-
-template<typename intensity_t>
-inline int MonoFrame<intensity_t>::height() const {
-	return h;
-}
-
-template<typename intensity_t>
-inline int MonoFrame<intensity_t>::width() const {
-	return w;
-}
-
-
-template <typename intensity_t>
-inline size_t MonoFrame<intensity_t>::sizeofData() const {
-	return numPixels() * sizeof(intensity_t);
-}
-
-
-template <typename intensity_t>
-inline intensity_t* MonoFrame<intensity_t>::data() const {
-	return mem;
-}
-
-
-template<typename intensity_t>
-inline intensity_t& MonoFrame<intensity_t>::operator()(int i) const {
-	return mem[i];
-}
-
-
-template <typename intensity_t>
-inline intensity_t& MonoFrame<intensity_t>::operator()(int x, int y) const {
-	return mem[y * w + x];
-}
-
-
-template<typename intensity_t>
-bool MonoFrame<intensity_t>::readFrom(istream& stream) {
-	stream.read((char*) mem, sizeofData());
-	return stream.gcount() == sizeofData();
-}
-
-template<typename intensity_t>
-void MonoFrame<intensity_t>::writeTo(ostream& stream) {
-	stream.write((char*) mem, sizeofData());
-}
-
-template<typename intensity_t>
-MonoFrame<intensity_t>& MonoFrame<intensity_t>::operator=(const MonoFrame<intensity_t>& obj) {
-	if (this != &obj) {
-		assert(w == obj.w);
-		assert(h == obj.h);
-		memcpy(mem, obj.mem, sizeofData());
+	intensity_t& intensityAt(int x, int y) const {
+		return plane.intensityAt(x, y);
 	}
-	return *this;
-}
 
 
-template<typename intensity_t>
-MonoFrame<intensity_t>::MonoFrame(const MonoFrame<intensity_t>& obj) :
-	width(obj.w),
-	height(obj.h),
-	mem(new intensity_t[w * h]) {
-	memcpy(mem, obj.mem, sizeofData());
-}
+	/*
+	** Populates the frame's intensity array by reading from a given istream.
+	**   Returns true if successful.
+	*/
+	bool readFrom(istream& stream) {
+		return plane.readFrom(stream);
+	}
 
 
-template<typename intensity_t>
-MonoFrame<intensity_t>::MonoFrame(int width, int height) :
-	w(width),
-	h(height),
-	mem(new intensity_t[width * height]) {
-}
+	/*
+	** Writes the frame's intensity array to a given ostream.
+	*/
+	void writeTo(ostream& stream) {
+		return plane.writeTo(stream);
+	}
 
 
-template <typename intensity_t>
-MonoFrame<intensity_t>::MonoFrame(int width, int height, intensity_t* mem) :
-	w(width),
-	h(height),
-	mem(new intensity_t[width * height]) {
-	memcpy(this->mem, mem, sizeofData());
-}
+public:
+	/*
+	** Constructor.
+	*/
+	MonoFrame(int width, int height) :
+		mem(new intensity_t[width * height]),
+		plane(width, height) {
+		plane.pointTo(mem);
+	}
 
 
-template<typename intensity_t>
-MonoFrame<intensity_t>::~MonoFrame() {
-	delete mem;
-}
+	/*
+	** Copy constructor.
+	*/
+	MonoFrame(const MonoFrame<intensity_t>& obj) :
+		mem(new intensity_t[obj.numPixels()]),
+		plane(obj.width(), obj.height()) {
+		plane.pointTo(mem);
+		copy(obj.mem, obj.mem + obj.numPixels(), mem);
+	}
+
+
+	/*
+	** Copy assignment operator.
+	*/
+	MonoFrame& operator=(const MonoFrame<intensity_t>& obj) {
+		if (this != &obj) {
+			if (numPixels() != obj.numPixels()) {
+				delete mem;
+				mem = new intensity_t[obj.numPixels()];
+				plane.pointTo(mem);
+			}
+			plane.setDimensionsTo(obj.width(), obj.height());
+			copy(obj.mem, obj.mem + obj.numPixels(), mem);
+		}
+		return *this;
+	}
+
+
+	/*
+	** Destructor.
+	*/
+	~MonoFrame<intensity_t>() {
+		delete mem;
+	}
+};

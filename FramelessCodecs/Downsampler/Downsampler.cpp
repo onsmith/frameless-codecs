@@ -12,6 +12,9 @@
 #include <cstdint>
 
 #include "MonoFrame.h"
+//#include "YUV444pFrame.h"
+//#include "YUV422pFrame.h"
+//#include "YUV420pFrame.h"
 
 
 using std::cout;
@@ -101,15 +104,16 @@ int main(int argc, char *argv[]) {
 		if (frame_count % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
 			cout << "Downsampling frame number "
 				<< frame_count
+				<< ".."
 				<< endl;
 		}
-		for (int y = 0; y < input_frame_height/2; y++) {
-			for (int x = 0; x < input_frame_width/2; x++) {
-				output_frame(x, y) =
-					input_frame(2*x,   2*y  ) +
-					input_frame(2*x+1, 2*y  ) +
-					input_frame(2*x,   2*y+1) +
-					input_frame(2*x+1, 2*y+1);
+		for (int y = 0; y < input_frame.height()/2; y++) {
+			for (int x = 0; x < input_frame.width()/2; x++) {
+				output_frame.intensityAt(x, y) =
+					input_frame.intensityAt(2*x,   2*y  ) +
+					input_frame.intensityAt(2*x+1, 2*y  ) +
+					input_frame.intensityAt(2*x,   2*y+1) +
+					input_frame.intensityAt(2*x+1, 2*y+1);
 			}
 		}
 		output_frame.writeTo(output_file);

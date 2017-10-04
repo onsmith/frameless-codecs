@@ -9,7 +9,7 @@ using std::ostream;
 
 
 template <typename intensity_t>
-class MonoFrame {
+class YUV422Frame {
 private:
 	/*
 	** Stores the width and height of the frame.
@@ -27,10 +27,10 @@ public:
 	/*
 	** Constructor.
 	*/
-	MonoFrame(int width, int height) :
+	YUV422Frame(int width, int height) :
 		width_(width),
 		height_(height),
-		data_(width * height) {
+		data_(width * height * 2) {
 	}
 
 
@@ -61,24 +61,80 @@ public:
 	/*
 	** Gets a pointer to the underlying data managed by the frame.
 	*/
-	intensity_t* data() {
+	intensity_t* data() const {
 		return data_.data();
 	}
 
 
 	/*
-	** Gets a reference to a given pixel's intensity value.
+	** Gets a pointer to the underlying y plane memory.
 	*/
-	intensity_t& intensityAt(int i) {
-		return data()[i];
+	intensity_t* y() const {
+		return data();
 	}
 
 
 	/*
-	** Gets a reference to a given pixel's intensity value.
+	** Gets a pointer to the underlying u plane memory.
 	*/
-	intensity_t& intensityAt(int x, int y) {
-		return intensityAt(y * width() + x);
+	intensity_t* u() const {
+		return y() + width() * height();
+	}
+
+
+	/*
+	** Gets a pointer to the underlying v plane memory.
+	*/
+	intensity_t* v() const {
+		return u() + width() * height() / 2;
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's y-plane intensity value.
+	*/
+	intensity_t& y(int i) const {
+		return y()[i];
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's u-plane intensity value.
+	*/
+	intensity_t& u(int i) const {
+		return u()[i];
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's v-plane intensity value.
+	*/
+	intensity_t& v(int i) const {
+		return v()[i];
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's y-plane intensity value.
+	*/
+	intensity_t& y(int x, int y) const {
+		return this->y(y * width() + x);
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's u-plane intensity value.
+	*/
+	intensity_t& u(int x, int y) const {
+		return u(y * width() / 2 + x);
+	}
+
+
+	/*
+	** Gets a reference to a given pixel's v-plane intensity value.
+	*/
+	intensity_t& v(int x, int y) const {
+		return v(y * width() / 2 + x);
 	}
 
 
@@ -88,7 +144,7 @@ public:
 	void setDimensionsTo(int width, int height) {
 		width_  = width;
 		height_ = height;
-		data_.resize(width * height);
+		data_.resize(width * height * 2);
 	}
 
 

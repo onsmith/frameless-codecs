@@ -12,9 +12,9 @@
 #include <cstdint>
 
 #include "MonoFrame.h"
-//#include "YUV444pFrame.h"
-//#include "YUV422pFrame.h"
-//#include "YUV420pFrame.h"
+#include "YUV444Frame.h"
+#include "YUV422Frame.h"
+#include "YUV420Frame.h"
 
 
 using std::cout;

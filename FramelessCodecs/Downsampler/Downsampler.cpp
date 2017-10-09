@@ -11,10 +11,7 @@
 #include <fstream>
 #include <cstdint>
 
-#include "MonoFrame.h"
-#include "YUV444Frame.h"
-#include "YUV422Frame.h"
-#include "YUV420Frame.h"
+#include "Frame/MonoFrame.h"
 
 
 using std::cout;

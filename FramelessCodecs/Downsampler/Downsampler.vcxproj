@@ -73,9 +73,15 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>C:\Users\Aaron\Documents\apps\frameless-codecs\FramelessCodecs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link />
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,10 +120,7 @@
     <ClCompile Include="Downsampler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MonoFrame.h" />
-    <ClInclude Include="YUV420Frame.h" />
-    <ClInclude Include="YUV422Frame.h" />
-    <ClInclude Include="YUV444Frame.h" />
+    <ClInclude Include="..\Frame\MonoFrame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

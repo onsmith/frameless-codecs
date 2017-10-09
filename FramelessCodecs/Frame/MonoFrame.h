@@ -59,7 +59,7 @@ public:
 
 
 	/*
-	** Gets a pointer to the underlying data managed by the frame.
+	** Gets a pointer to the underlying data managed by the frame object.
 	*/
 	intensity_t* data() {
 		return data_.data();

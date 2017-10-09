@@ -20,16 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="YUV422Frame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="YUV444Frame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="YUV420Frame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MonoFrame.h">
+    <ClInclude Include="..\Frame\MonoFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

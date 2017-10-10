@@ -6,22 +6,22 @@
 
 
 #include <iostream>
+using std::cout;
+using std::cerr;
+using std::endl;
+using std::ostream;
+
 #include <fstream>
+using std::ifstream;
+using std::ofstream;
+using std::ios;
+
 #include <cstdint>
 
 #include "Frame/MonoFrame.h"
 #include "Frame/YUV420Frame.h"
 #include "Frame/YUV422Frame.h"
 #include "Frame/YUV444Frame.h"
-
-
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::ostream;
-using std::ifstream;
-using std::ofstream;
-using std::ios;
 
 
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
@@ -39,21 +39,13 @@ void print_usage(ostream& stream, char* program_filename) {
 
 
 /*
-** Prints the program usage to cout.
-*/
-void print_usage(char* program_filename) {
-	print_usage(cout, program_filename);
-}
-
-
-/*
 ** Defines the entry point for the console application.
 */
 int main(int argc, char *argv[]) {
 	// Check number of passed command line arguments
 	if (argc != 7) {
 		cerr << "Incorrect number of arguments." << endl;
-		print_usage(argv[0]);
+		print_usage(cerr, argv[0]);
 		getchar();
 		return 1;
 	}

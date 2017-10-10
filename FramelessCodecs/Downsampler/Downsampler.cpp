@@ -8,19 +8,19 @@
 
 
 #include <iostream>
-#include <fstream>
-#include <cstdint>
-
-#include "Frame/MonoFrame.h"
-
-
 using std::cout;
 using std::cerr;
 using std::endl;
 using std::ostream;
+
+#include <fstream>
 using std::ifstream;
 using std::ofstream;
 using std::ios;
+
+#include <cstdint>
+
+#include "Frame/MonoFrame.h"
 
 
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	// Check number of passed command line arguments
 	if (argc != 5) {
 		cerr << "Incorrect number of arguments." << endl;
-		print_usage(cout, argv[0]);
+		print_usage(cerr, argv[0]);
 		getchar();
 		return 1;
 	}

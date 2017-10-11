@@ -16,6 +16,9 @@ using std::ifstream;
 using std::ofstream;
 using std::ios;
 
+#include <algorithm>
+using std::copy;
+
 #include <cstdint>
 
 #include "Frame/MonoFrame.h"
@@ -25,6 +28,44 @@ using std::ios;
 
 
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
+
+
+/*
+** Converts a yuv444p frame to a yuv422p frame.
+*/
+void yuv444p_to_yuv422p(YUV444Frame<uint8_t>& src, YUV422Frame<uint8_t>& dst) {
+	const int num_pixels = src.width() * src.height();
+	copy(src.y(), src.y() + num_pixels, dst.y());
+	for (int i = 0; i < num_pixels / 2; i++) {
+		dst.u(i) = src.u(2*i);
+		dst.v(i) = src.v(2*i);
+	}
+}
+
+
+/*
+** Converts a yuv444p frame to a yuv420p frame.
+*/
+void yuv444p_to_yuv420p(YUV444Frame<uint8_t>& src, YUV420Frame<uint8_t>& dst) {
+	const int num_pixels = src.width() * src.height();
+	copy(src.y(), src.y() + num_pixels, dst.y());
+	for (int y = 0; y < src.height() / 2; y++) {
+		for (int x = 0; x < src.width() / 2; x++) {
+			dst.u(x, y) = src.u(2*x, 2*y);
+			dst.v(x, y) = src.v(2*x, 2*y);
+		}
+	}
+}
+
+
+/*
+** Converts a yuv444p frame to a gray16le frame.
+*/
+void yuv444p_to_gray16le(YUV444Frame<uint8_t>& src, MonoFrame<uint16_t>& dst) {
+	for (int i = 0; i < src.width() * src.height(); i++) {
+		dst.intensityAt(i) = src.y(i) << 8;
+	}
+}
 
 
 /*

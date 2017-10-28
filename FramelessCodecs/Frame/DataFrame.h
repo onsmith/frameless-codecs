@@ -11,10 +11,11 @@ using std::ostream;
 
 
 /**
- * A DataFrame is an abstract class that represents a single video frame that
- *   holds intensity data. A DataFrame object knows the data type of intensity
- *   values but not the organization of the intensities, which are specified
- *   by the concrete subclasses of this class.
+ * DataFrame is an abstract implementation of the Frame class. The DataFrame
+ *   class implements storage of frame intensity values by delegating to an
+ *   internally-managed vector<T> instance. A DataFrame specifies the data type
+ *   and number of intensity values, but allows subclasses to define the
+ *   intensity addressing scheme.
  */
 template <typename intensity_t>
 class DataFrame : public Frame {
@@ -79,13 +80,4 @@ public:
 		size_t const numBytes = size() * sizeof(intensity_t);
 		stream.write(reinterpret_cast<char*>(data()), numBytes);
 	}
-
-
-	/*
-	** Exposes access to individual intensities in the frame. The meaning of the
-	**   addressing parameters is defined by the derived classes.
-	*/
-	virtual intensity_t& intensityAt(int)           const = 0;
-	virtual intensity_t& intensityAt(int, int)      const = 0;
-	virtual intensity_t& intensityAt(int, int, int) const = 0;
 };

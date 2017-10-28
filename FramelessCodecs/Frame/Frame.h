@@ -12,9 +12,9 @@ using std::ostream;
 
 
 /**
- * A Frame is an abstract class that represents a single video frame which
- *   holds intensity data. The organization, type, and format of the intensity
- *   data is specified by the concrete subclasses of this class.
+ * A Frame is an abstract class representing a single video frame which holds
+ *   intensity data. Intensity representation and organization is unknown to
+ *   this class, and is instead defined in subclasses.
  */
 class Frame {
 private:
@@ -31,7 +31,7 @@ protected:
 	Frame(int width, int height);
 
 	/*
-	** Resize the frame.
+	** Resize the dimensions of the frame.
 	*/
 	void resize(int width, int height);
 
@@ -56,11 +56,6 @@ public:
 	** Writes the frame data directly into an ostream.
 	*/
 	virtual void writeTo(ostream&) = 0;
-
-	/*
-	** Make the assignment operator virtual for frame transcoding.
-	*/
-	//virtual Frame& operator=(Frame& const) = default;
 
 	/*
 	** Base classes should always have a virtual destructor.

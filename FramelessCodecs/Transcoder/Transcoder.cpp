@@ -16,54 +16,68 @@ using std::ifstream;
 using std::ofstream;
 using std::ios;
 
-#include <algorithm>
-using std::copy;
-
 #include <cstdint>
 
-#include "Frame/MonoFrame.h"
-#include "Frame/YUV420Frame.h"
-#include "Frame/YUV422Frame.h"
-#include "Frame/YUV444Frame.h"
+#include "Frame/Gray16leFrame.h"
+#include "Frame/GrayDoubleFrame.h"
+#include "Frame/Yuv420pFrame.h"
+#include "Frame/Yuv422pFrame.h"
+#include "Frame/Yuv444pFrame.h"
 
 
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
 
 
 /*
-** Converts a yuv444p frame to a yuv422p frame.
+** Valid frame formats.
 */
-void yuv444p_to_yuv422p(YUV444Frame<uint8_t>& src, YUV422Frame<uint8_t>& dst) {
-	const int num_pixels = src.width() * src.height();
-	copy(src.y(), src.y() + num_pixels, dst.y());
-	for (int i = 0; i < num_pixels / 2; i++) {
-		dst.u(i) = src.u(2*i);
-		dst.v(i) = src.v(2*i);
+enum class FrameFormat {
+	Unknown,
+	Gray16le,
+	GrayDouble,
+	Yuv444p,
+	Yuv422p,
+	Yuv420p,
+};
+
+
+/*
+** Factory method for frame objects.
+*/
+Frame* CreateFrame(int width, int height, FrameFormat frame_format) {
+	switch (frame_format) {
+	case FrameFormat::Gray16le:
+		return new Gray16leFrame(width, height);
+	case FrameFormat::GrayDouble:
+		return new GrayDoubleFrame(width, height);
+	case FrameFormat::Yuv444p:
+		return new Yuv444pFrame(width, height);
+	case FrameFormat::Yuv422p:
+		return new Yuv422pFrame(width, height);
+	case FrameFormat::Yuv420p:
+		return new Yuv420pFrame(width, height);
+	default:
+		return nullptr;
 	}
 }
 
 
 /*
-** Converts a yuv444p frame to a yuv420p frame.
+** Lookup function for a frame format.
 */
-void yuv444p_to_yuv420p(YUV444Frame<uint8_t>& src, YUV420Frame<uint8_t>& dst) {
-	const int num_pixels = src.width() * src.height();
-	copy(src.y(), src.y() + num_pixels, dst.y());
-	for (int y = 0; y < src.height() / 2; y++) {
-		for (int x = 0; x < src.width() / 2; x++) {
-			dst.u(x, y) = src.u(2*x, 2*y);
-			dst.v(x, y) = src.v(2*x, 2*y);
-		}
-	}
-}
-
-
-/*
-** Converts a yuv444p frame to a gray16le frame.
-*/
-void yuv444p_to_gray16le(YUV444Frame<uint8_t>& src, MonoFrame<uint16_t>& dst) {
-	for (int i = 0; i < src.width() * src.height(); i++) {
-		dst.intensityAt(i) = src.y(i) << 8;
+FrameFormat LookupFrameFormat(const char* const frame_format) {
+	if (strcmp(frame_format, "gray16le") == 0) {
+		return FrameFormat::Gray16le;
+	} else if (strcmp(frame_format, "graydouble") == 0) {
+		return FrameFormat::GrayDouble;
+	} else if (strcmp(frame_format, "yuv444p") == 0) {
+		return FrameFormat::Yuv444p;
+	} else if (strcmp(frame_format, "yuv422p") == 0) {
+		return FrameFormat::Yuv422p;
+	} else if (strcmp(frame_format, "yuv420p") == 0) {
+		return FrameFormat::Yuv420p;
+	} else {
+		return FrameFormat::Unknown;
 	}
 }
 
@@ -92,13 +106,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Parse command line arguments
-	const char *program_filename = argv[0];
-	const char *input_filename   = argv[1];
-	const char *output_filename  = argv[2];
-	const int  frame_width       = atoi(argv[3]);
-	const int  frame_height      = atoi(argv[4]);
-	const char *input_format     = argv[5];
-	const char *output_format    = argv[6];
+	const char        *program_filename  = argv[0];
+	const char        *input_filename    = argv[1];
+	const char        *output_filename   = argv[2];
+	const int         frame_width        = atoi(argv[3]);
+	const int         frame_height       = atoi(argv[4]);
+	const char        *input_format_str  = argv[5];
+	const char        *output_format_str = argv[6];
+	const FrameFormat input_format       = LookupFrameFormat(input_format_str);
+	const FrameFormat output_format      = LookupFrameFormat(output_format_str);
 
 	// Validate frame dimensions
 	if (frame_width <= 0 || frame_height <= 0) {
@@ -111,8 +127,96 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// Allocate input frame
+	// Validate input frame format
+	if (input_format == FrameFormat::Unknown) {
+		cerr << "Invalid input frame format: "
+		     << input_format_str
+		     << endl
+		     << "Valid options are: gray16le, graydouble, yuv444p, yuv422p, yuv420p"
+		     << endl;
+		getchar();
+		return 1;
+	}
 
+	// Validate output frame format
+	if (output_format == FrameFormat::Unknown) {
+		cerr << "Invalid output frame format: "
+		     << output_format_str
+		     << endl
+		     << "Valid options are: gray16le, graydouble, yuv444p, yuv422p, yuv420p"
+		     << endl;
+		getchar();
+		return 1;
+	}
+
+	// Prepare function pointer to transcoding algorithm
+	void (*TranscodeAlgorithm)(Frame& const input, Frame& const output);
+
+	switch(input_format) {
+	case (FrameFormat::Gray16le):
+		switch(output_format) {
+		case (FrameFormat::GrayDouble):
+			TranscodeAlgorithm = [](Frame& const input, Frame& const output) {
+				static_cast<GrayDoubleFrame&>(output) = static_cast<Gray16leFrame&>(input);
+			};
+			break;
+		case (FrameFormat::Yuv444p):
+			break;
+		case (FrameFormat::Yuv422p):
+			break;
+		case (FrameFormat::Yuv420p):
+			break;
+		}
+		break;
+	case (FrameFormat::GrayDouble):
+		switch(output_format) {
+		case (FrameFormat::Gray16le):
+			break;
+		case (FrameFormat::Yuv444p):
+			break;
+		case (FrameFormat::Yuv422p):
+			break;
+		case (FrameFormat::Yuv420p):
+			break;
+		}
+		break;
+	case (FrameFormat::Yuv444p):
+		switch(output_format) {
+		case (FrameFormat::Gray16le):
+			break;
+		case (FrameFormat::GrayDouble):
+			break;
+		case (FrameFormat::Yuv422p):
+			break;
+		case (FrameFormat::Yuv420p):
+			break;
+		}
+		break;
+	case (FrameFormat::Yuv422p):
+		switch(output_format) {
+		case (FrameFormat::Gray16le):
+			break;
+		case (FrameFormat::GrayDouble):
+			break;
+		case (FrameFormat::Yuv444p):
+			break;
+		case (FrameFormat::Yuv420p):
+			break;
+		}
+		break;
+	case (FrameFormat::Yuv420p):
+		switch(output_format) {
+		case (FrameFormat::Gray16le):
+			break;
+		case (FrameFormat::GrayDouble):
+			break;
+		case (FrameFormat::Yuv444p):
+			break;
+		case (FrameFormat::Yuv422p):
+			break;
+		}
+		break;
+	}
 
 	// Open input file
 	ifstream input_file;
@@ -136,13 +240,13 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// Allocate frames
-	//MonoFrame<uint16_t>  input_frame(input_frame_width,   input_frame_height  );
-	//MonoFrame<uint16_t> output_frame(input_frame_width/2, input_frame_height/2);
+	// Allocate buffer frames
+	Frame* input_frame  = CreateFrame(frame_width, frame_height, input_format);
+	Frame* output_frame = CreateFrame(frame_width, frame_height, output_format);
 
-	// Downsample file
+	// Transcode video
 	int frame_count = 0;
-	while (input_frame.readFrom(input_file)) {
+	while (input_frame->readFrom(input_file)) {
 		frame_count++;
 		if (frame_count % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
 			cout << "Downsampling frame number "
@@ -150,21 +254,18 @@ int main(int argc, char *argv[]) {
 				<< ".."
 				<< endl;
 		}
-		for (int y = 0; y < input_frame.height()/2; y++) {
-			for (int x = 0; x < input_frame.width()/2; x++) {
-				output_frame.intensityAt(x, y) =
-					input_frame.intensityAt(2*x,   2*y  ) +
-					input_frame.intensityAt(2*x+1, 2*y  ) +
-					input_frame.intensityAt(2*x,   2*y+1) +
-					input_frame.intensityAt(2*x+1, 2*y+1);
-			}
-		}
-		output_frame.writeTo(output_file);
+		//*output_frame = *input_frame;
+		TranscodeAlgorithm(*input_frame, *output_frame);
+		output_frame->writeTo(output_file);
 	}
 
 	// Close files
 	input_file.close();
 	output_file.close();
+
+	// Free memory
+	delete input_frame;
+	delete output_frame;
 
 	// All done
 	cout << "Done! "

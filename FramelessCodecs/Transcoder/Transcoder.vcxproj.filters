@@ -18,18 +18,45 @@
     <ClCompile Include="Transcoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Frame\Frame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\Yuv422pFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\Yuv420pFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\Yuv444pFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\GrayDoubleFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\Gray16leFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Frame\MonoFrame.h">
+    <ClInclude Include="..\Frame\DataFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Frame\YUV420Frame.h">
+    <ClInclude Include="..\Frame\Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Frame\YUV422Frame.h">
+    <ClInclude Include="..\Frame\Yuv420pFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Frame\YUV444Frame.h">
+    <ClInclude Include="..\Frame\Yuv422pFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Frame\Yuv444pFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Frame\GrayDoubleFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Frame\Gray16leFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

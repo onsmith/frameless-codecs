@@ -30,13 +30,13 @@ protected:
 	*/
 	Frame(int width, int height);
 
-	/*
-	** Resize the dimensions of the frame.
-	*/
-	void resize(int width, int height);
-
 
 public:
+	/*
+	** Changes the dimensions of the frame.
+	*/
+	virtual void resize(int width, int height);
+
 	/*
 	** Gets the width of the frame.
 	*/
@@ -46,6 +46,11 @@ public:
 	** Gets the height of the frame.
 	*/
 	int height() const;
+
+	/*
+	** Gets the number of intensities stored by the frame.
+	*/
+	virtual int size() const = 0;
 
 	/*
 	** Reads data from an istream directly into the frame.

@@ -35,7 +35,6 @@ protected:
 		data_(size) {
 	}
 
-
 	/*
 	** Changes the dimensions of the frame.
 	*/
@@ -49,10 +48,9 @@ public:
 	/*
 	** Gets the number of intensities stored by the frame.
 	*/
-	int size() const {
+	int size() const final {
 		return data_.size();
 	}
-
 
 	/*
 	** Gets a pointer to the underlying data managed by the frame object.
@@ -60,7 +58,6 @@ public:
 	intensity_t* data() const {
 		return data_.data();
 	}
-
 
 	/*
 	** Populates the frame's intensity data by reading from a given istream.
@@ -71,7 +68,6 @@ public:
 		stream.read(reinterpret_cast<char*>(data()), numBytes);
 		return (stream.gcount() == numBytes);
 	}
-
 
 	/*
 	** Writes the frame's intensity data to a given ostream.

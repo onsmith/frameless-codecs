@@ -1,10 +1,6 @@
 #pragma once
 
 #include "DataFrame.h"
-#include "Yuv422pFrame.h"
-#include "Yuv420pFrame.h"
-#include "GrayDoubleFrame.h"
-#include "Gray16leFrame.h"
 
 #include <cstdint>
 
@@ -15,7 +11,7 @@
  *   object represents a yuv color format, 8 bit color component depth,
  *   planar-organized video frame with no chroma subsampling.
  */
-class Yuv444pFrame : public DataFrame<uint8_t> {
+class Yuv444pFrame final : public DataFrame<uint8_t> {
 private:
 	/*
 	** Stores the number of pixels in each plane.
@@ -24,13 +20,6 @@ private:
 
 
 public:
-	/*
-	** Plane index constants.
-	*/
-	const static int Y_PLANE = 0;
-	const static int U_PLANE = 1;
-	const static int V_PLANE = 2;
-
 	/*
 	** Constructor.
 	*/
@@ -49,10 +38,17 @@ public:
 	uint8_t& intensityAt(int plane, int x, int y) const;
 
 	/*
-	** Overload the assignment operator for frame transcoding.
+	** Overload copy assignment operator.
 	*/
-	Yuv444pFrame& operator=(Yuv422pFrame& const);
-	Yuv444pFrame& operator=(Yuv420pFrame& const);
-	Yuv444pFrame& operator=(GrayDoubleFrame& const);
-	Yuv444pFrame& operator=(Gray16leFrame& const);
+	Yuv444pFrame& operator=(Frame& const src) final;
+
+	/*
+	** Methods to get an intensity value by specifying its location in the frame.
+	*/
+	uint8_t  getIntensityAsByte  (int plane, int i       ) const final;
+	uint8_t  getIntensityAsByte  (int plane, int x, int y) const final;
+	uint16_t getIntensityAs16Bits(int plane, int i       ) const final;
+	uint16_t getIntensityAs16Bits(int plane, int x, int y) const final;
+	double   getIntensityAsDouble(int plane, int i       ) const final;
+	double   getIntensityAsDouble(int plane, int x, int y) const final;
 };

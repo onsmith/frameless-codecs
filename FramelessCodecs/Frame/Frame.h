@@ -1,14 +1,10 @@
 #pragma once
 
-#include "Yuv444pFrame.h"
-#include "Yuv422pFrame.h"
-#include "Yuv420pFrame.h"
-#include "GrayDoubleFrame.h"
-#include "Gray16leFrame.h"
-
 #include <fstream>
 using std::istream;
 using std::ostream;
+
+#include <cstdint>
 
 
 /**
@@ -33,6 +29,14 @@ protected:
 
 public:
 	/*
+	** Plane index constants.
+	*/
+	const static int    Y_PLANE = 0;
+	const static int    U_PLANE = 1;
+	const static int    V_PLANE = 2;
+	const static int LUMA_PLANE = Y_PLANE;
+
+	/*
 	** Changes the dimensions of the frame.
 	*/
 	virtual void resize(int width, int height);
@@ -51,6 +55,21 @@ public:
 	** Gets the number of intensities stored by the frame.
 	*/
 	virtual int size() const = 0;
+
+	/*
+	** Methods to get an intensity value by specifying its location in the frame.
+	*/
+	virtual uint8_t  getIntensityAsByte  (int plane, int i       ) const = 0;
+	virtual uint8_t  getIntensityAsByte  (int plane, int x, int y) const = 0;
+	virtual uint16_t getIntensityAs16Bits(int plane, int i       ) const = 0;
+	virtual uint16_t getIntensityAs16Bits(int plane, int x, int y) const = 0;
+	virtual double   getIntensityAsDouble(int plane, int i       ) const = 0;
+	virtual double   getIntensityAsDouble(int plane, int x, int y) const = 0;
+
+	/*
+	** Overload copy assignment operator.
+	*/
+	virtual Frame& operator=(Frame& const src) = 0;
 
 	/*
 	** Reads data from an istream directly into the frame.

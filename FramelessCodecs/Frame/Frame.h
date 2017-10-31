@@ -59,11 +59,8 @@ public:
 	/*
 	** Methods to get an intensity value by specifying its location in the frame.
 	*/
-	virtual uint8_t  getIntensityAsByte  (int plane, int i       ) = 0;
 	virtual uint8_t  getIntensityAsByte  (int plane, int x, int y) = 0;
-	virtual uint16_t getIntensityAs16Bits(int plane, int i       ) = 0;
 	virtual uint16_t getIntensityAs16Bits(int plane, int x, int y) = 0;
-	virtual double   getIntensityAsDouble(int plane, int i       ) = 0;
 	virtual double   getIntensityAsDouble(int plane, int x, int y) = 0;
 
 	/*

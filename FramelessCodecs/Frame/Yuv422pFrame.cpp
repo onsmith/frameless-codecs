@@ -50,26 +50,14 @@ Yuv422pFrame& Yuv422pFrame::operator=(Frame& src) {
 	return *this;
 }
 
-uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int i) {
-	return intensityAt(plane, i);
-}
-
 uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int x, int y) {
-	return intensityAt(plane, x/2, y);
-}
-
-uint16_t Yuv422pFrame::getIntensityAs16Bits(int plane, int i) {
-	return static_cast<uint16_t>(intensityAt(plane, i)) << 8;
+	return intensityAt(plane, (plane == Y_PLANE) ? x : x/2, y);
 }
 
 uint16_t Yuv422pFrame::getIntensityAs16Bits(int plane, int x, int y) {
-	return static_cast<uint16_t>(intensityAt(plane, x, y)) << 8;
-}
-
-double Yuv422pFrame::getIntensityAsDouble(int plane, int i) {
-	return static_cast<double>(intensityAt(plane, i)) / 0xFF;
+	return static_cast<uint16_t>(intensityAt(plane, (plane == Y_PLANE) ? x : x/2, y)) << 8;
 }
 
 double Yuv422pFrame::getIntensityAsDouble(int plane, int x, int y) {
-	return static_cast<double>(intensityAt(plane, x, y)) / 0xFF;
+	return static_cast<double>(intensityAt(plane, (plane == Y_PLANE) ? x : x/2, y)) / 0xFF;
 }

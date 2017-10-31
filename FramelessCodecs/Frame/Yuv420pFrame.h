@@ -24,13 +24,6 @@ private:
 
 public:
 	/*
-	** Plane index constants.
-	*/
-	const static int Y_PLANE = 0;
-	const static int U_PLANE = 1;
-	const static int V_PLANE = 2;
-
-	/*
 	** Constructor.
 	*/
 	Yuv420pFrame(int width, int height);
@@ -55,10 +48,7 @@ public:
 	/*
 	** Methods to get an intensity value by specifying its location in the frame.
 	*/
-	uint8_t  getIntensityAsByte  (int plane, int i       ) final;
 	uint8_t  getIntensityAsByte  (int plane, int x, int y) final;
-	uint16_t getIntensityAs16Bits(int plane, int i       ) final;
 	uint16_t getIntensityAs16Bits(int plane, int x, int y) final;
-	double   getIntensityAsDouble(int plane, int i       ) final;
 	double   getIntensityAsDouble(int plane, int x, int y) final;
 };

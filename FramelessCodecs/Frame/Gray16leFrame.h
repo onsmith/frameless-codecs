@@ -22,7 +22,6 @@ public:
 	*/
 	uint16_t& intensityAt(int i);
 	uint16_t& intensityAt(int x, int y);
-	uint16_t& intensityAt(int _, int x, int y);
 
 	/*
 	** Overload copy assignment operator.
@@ -32,10 +31,7 @@ public:
 	/*
 	** Methods to get an intensity value by specifying its location in the frame.
 	*/
-	uint8_t  getIntensityAsByte  (int plane, int i       ) final;
 	uint8_t  getIntensityAsByte  (int plane, int x, int y) final;
-	uint16_t getIntensityAs16Bits(int plane, int i       ) final;
 	uint16_t getIntensityAs16Bits(int plane, int x, int y) final;
-	double   getIntensityAsDouble(int plane, int i       ) final;
 	double   getIntensityAsDouble(int plane, int x, int y) final;
 };

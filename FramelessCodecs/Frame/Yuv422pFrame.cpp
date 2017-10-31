@@ -39,8 +39,12 @@ Yuv422pFrame& Yuv422pFrame::operator=(Frame& src) {
 	for (int y = 0; y < height(); y++) {
 		for (int x = 0; x < width(); x++) {
 			intensityAt(Y_PLANE, x, y) = src.getIntensityAsByte(Y_PLANE, x, y);
-			intensityAt(U_PLANE, x, y) = src.getIntensityAsByte(U_PLANE, x, y);
-			intensityAt(V_PLANE, x, y) = src.getIntensityAsByte(V_PLANE, x, y);
+		}
+	}
+	for (int y = 0; y < height(); y++) {
+		for (int x = 0; x < width()/2; x++) {
+			intensityAt(U_PLANE, x, y) = src.getIntensityAsByte(U_PLANE, x*2, y);
+			intensityAt(V_PLANE, x, y) = src.getIntensityAsByte(V_PLANE, x*2, y);
 		}
 	}
 	return *this;
@@ -51,7 +55,7 @@ uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int i) {
 }
 
 uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int x, int y) {
-	return intensityAt(plane, x, y);
+	return intensityAt(plane, x/2, y);
 }
 
 uint16_t Yuv422pFrame::getIntensityAs16Bits(int plane, int i) {

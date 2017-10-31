@@ -2,9 +2,6 @@
 
 #include <cstdint>
 
-#include <algorithm>
-using std::copy;
-
 
 Yuv422pFrame::Yuv422pFrame(int width, int height) :
 	DataFrame(width, height, 2*width*height),

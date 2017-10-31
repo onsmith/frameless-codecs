@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransformIntensity", "TransformIntensity\TransformIntensity.vcxproj", "{12DD1011-D4EF-418A-99E6-14EDE9EFC913}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeIntensityHistogram", "ComputeIntensityHistogram\ComputeIntensityHistogram.vcxproj", "{A245D04B-9F9B-4B16-AF47-4E350423032E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatchIntensityHistogram", "MatchIntensityHistogram\MatchIntensityHistogram.vcxproj", "{96316164-48C4-4610-8727-A2F730A6BA67}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertFrameFormat", "ConvertFrameFormat\ConvertFrameFormat.vcxproj", "{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Downsampler", "Downsampler\Downsampler.vcxproj", "{821C56FE-5C18-4F50-BF60-F9FB444611A8}"
 EndProject
@@ -47,14 +45,6 @@ Global
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Release|x64.Build.0 = Release|x64
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Release|x86.ActiveCfg = Release|Win32
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Release|x86.Build.0 = Release|Win32
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Debug|x64.ActiveCfg = Debug|x64
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Debug|x64.Build.0 = Debug|x64
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Debug|x86.ActiveCfg = Debug|Win32
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Debug|x86.Build.0 = Debug|Win32
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Release|x64.ActiveCfg = Release|x64
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Release|x64.Build.0 = Release|x64
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Release|x86.ActiveCfg = Release|Win32
-		{C5A8DAC9-A199-48A3-B458-D7ABAC8AA731}.Release|x86.Build.0 = Release|Win32
 		{821C56FE-5C18-4F50-BF60-F9FB444611A8}.Debug|x64.ActiveCfg = Debug|x64
 		{821C56FE-5C18-4F50-BF60-F9FB444611A8}.Debug|x64.Build.0 = Debug|x64
 		{821C56FE-5C18-4F50-BF60-F9FB444611A8}.Debug|x86.ActiveCfg = Debug|Win32

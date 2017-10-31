@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 	while (input_frame->readFrom(input_file)) {
 		frame_count++;
 		if (frame_count % PRINT_UPDATE_EVERY_X_FRAMES == 0) {
-			cout << "Downsampling frame number "
+			cout << "Transcoding frame number "
 				<< frame_count
 				<< ".."
 				<< endl;

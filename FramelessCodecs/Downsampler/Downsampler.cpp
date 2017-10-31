@@ -20,7 +20,7 @@ using std::ios;
 
 #include <cstdint>
 
-#include "Frame/MonoFrame.h"
+#include "Frame/Gray16leFrame.h"
 
 
 #define PRINT_UPDATE_EVERY_X_FRAMES 30
@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Allocate frames
-	MonoFrame<uint16_t>  input_frame(input_frame_width,   input_frame_height  );
-	MonoFrame<uint16_t> output_frame(input_frame_width/2, input_frame_height/2);
+	Gray16leFrame  input_frame(input_frame_width,   input_frame_height  );
+	Gray16leFrame output_frame(input_frame_width/2, input_frame_height/2);
 
 	// Downsample file
 	int frame_count = 0;
@@ -107,10 +107,10 @@ int main(int argc, char *argv[]) {
 		for (int y = 0; y < input_frame.height()/2; y++) {
 			for (int x = 0; x < input_frame.width()/2; x++) {
 				output_frame.intensityAt(x, y) =
-					input_frame.intensityAt(2*x,   2*y  ) +
-					input_frame.intensityAt(2*x+1, 2*y  ) +
-					input_frame.intensityAt(2*x,   2*y+1) +
-					input_frame.intensityAt(2*x+1, 2*y+1);
+					(input_frame.intensityAt(2*x,   2*y  ) >> 2) +
+					(input_frame.intensityAt(2*x+1, 2*y  ) >> 2) +
+					(input_frame.intensityAt(2*x,   2*y+1) >> 2) +
+					(input_frame.intensityAt(2*x+1, 2*y+1) >> 2);
 			}
 		}
 		output_frame.writeTo(output_file);

@@ -18,12 +18,15 @@
     <ClCompile Include="Downsampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Frame\Gray16leFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Frame\Frame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Frame\MonoFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Frame\Frame.h">
+    <ClInclude Include="..\Frame\Gray16leFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

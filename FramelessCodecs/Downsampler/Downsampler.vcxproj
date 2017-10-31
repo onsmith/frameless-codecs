@@ -117,11 +117,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Frame\Frame.cpp" />
+    <ClCompile Include="..\Frame\Gray16leFrame.cpp" />
     <ClCompile Include="Downsampler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Frame\Frame.h" />
-    <ClInclude Include="..\Frame\MonoFrame.h" />
+    <ClInclude Include="..\Frame\Gray16leFrame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

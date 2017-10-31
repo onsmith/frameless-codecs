@@ -31,51 +31,41 @@ uint8_t& Yuv422pFrame::intensityAt(int plane, int i) const {
 }
 
 uint8_t& Yuv422pFrame::intensityAt(int plane, int x, int y) const {
-	return intensityAt(plane, y * strides_[plane] + x);
+	return intensityAt(plane, y * strides_[plane] + x/2);
 }
 
-Yuv422pFrame& Yuv422pFrame::operator=(Yuv444pFrame& const src) {
+Yuv422pFrame& Yuv422pFrame::operator=(Frame& const src) {
 	resize(src.width(), src.height());
-	copy(src.data(), src.data() + width()*height(), data());
-	for (int i = 0; i < (width()*height())/2; i++) {
-		intensityAt(U_PLANE, i) = src.intensityAt(Yuv444pFrame::U_PLANE, i*2);
-		intensityAt(V_PLANE, i) = src.intensityAt(Yuv444pFrame::V_PLANE, i*2);
-	}
-	return *this;
-}
-
-Yuv422pFrame& Yuv422pFrame::operator=(Yuv420pFrame& const src) {
-	resize(src.width(), src.height());
-	copy(src.data(), src.data() + width()*height(), data());
 	for (int y = 0; y < height(); y++) {
-		for (int x = 0; x < width()/2; x++) {
-			intensityAt(U_PLANE, x, y) = src.intensityAt(Yuv420pFrame::U_PLANE, x, y/2);
-			intensityAt(V_PLANE, x, y) = src.intensityAt(Yuv420pFrame::V_PLANE, x, y/2);
+		for (int x = 0; x < width(); x++) {
+			intensityAt(Y_PLANE, x, y) = src.getIntensityAsByte(Y_PLANE, x, y);
+			intensityAt(U_PLANE, x, y) = src.getIntensityAsByte(U_PLANE, x, y);
+			intensityAt(V_PLANE, x, y) = src.getIntensityAsByte(V_PLANE, x, y);
 		}
 	}
 	return *this;
 }
 
-Yuv422pFrame& Yuv422pFrame::operator=(GrayDoubleFrame& const src) {
-	resize(src.width(), src.height());
-	for (int i = 0; i < width()*height(); i++) {
-		intensityAt(Y_PLANE, i) = static_cast<uint8_t>(src.intensityAt(i) * 0xFF);
-	}
-	for (int i = 0; i < (width()*height())/2; i++) {
-		intensityAt(U_PLANE, i) = 0x80;
-		intensityAt(V_PLANE, i) = 0x80;
-	}
-	return *this;
+uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int i) const {
+	return intensityAt(plane, i);
 }
 
-Yuv422pFrame& Yuv422pFrame::operator=(Gray16leFrame& const src) {
-	resize(src.width(), src.height());
-	for (int i = 0; i < width()*height(); i++) {
-		intensityAt(Y_PLANE, i) = static_cast<uint8_t>(src.intensityAt(i) >> 8);
-	}
-	for (int i = 0; i < (width()*height())/2; i++) {
-		intensityAt(U_PLANE, i) = 0x80;
-		intensityAt(V_PLANE, i) = 0x80;
-	}
-	return *this;
+uint8_t Yuv422pFrame::getIntensityAsByte(int plane, int x, int y) const {
+	return intensityAt(plane, x, y);
+}
+
+uint16_t Yuv422pFrame::getIntensityAs16Bits(int plane, int i) const {
+	return static_cast<uint16_t>(intensityAt(plane, i)) << 8;
+}
+
+uint16_t Yuv422pFrame::getIntensityAs16Bits(int plane, int x, int y) const {
+	return static_cast<uint16_t>(intensityAt(plane, x, y)) << 8;
+}
+
+double Yuv422pFrame::getIntensityAsDouble(int plane, int i) const {
+	return static_cast<double>(intensityAt(plane, i)) / 0xFF;
+}
+
+double Yuv422pFrame::getIntensityAsDouble(int plane, int x, int y) const {
+	return static_cast<double>(intensityAt(plane, x, y)) / 0xFF;
 }

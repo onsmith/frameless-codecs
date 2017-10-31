@@ -9,7 +9,7 @@
 #include <cstdint>
 
 
-class Yuv420pFrame : public DataFrame<uint8_t> {
+class Yuv420pFrame final : public DataFrame<uint8_t> {
 private:
 	/*
 	** Stores the stride of each plane.
@@ -38,12 +38,28 @@ public:
 	/*
 	** Changes the dimensions of the frame.
 	*/
-	void resize(int width, int height);
+	void resize(int width, int height) final;
 
 	/*
 	** Exposes access to individual intensities in the frame.
 	*/
-	uint8_t& intensityAt(int i)                   const final;
-	uint8_t& intensityAt(int plane, int i)        const final;
-	uint8_t& intensityAt(int plane, int x, int y) const final;
+	uint8_t& intensityAt(int i) const;
+	uint8_t& intensityAt(int plane, int i) const;
+	uint8_t& intensityAt(int plane, int x, int y) const;
+
+	/*
+	** Overload copy assignment operator.
+	*/
+	Yuv420pFrame& operator=(Frame& const src) final;
+
+	/*
+	** Methods to get an intensity value by specifying its location in the frame.
+	*/
+	uint8_t  getIntensityAsByte  (int plane, int i       ) const final;
+	uint8_t  getIntensityAsByte  (int plane, int x, int y) const final;
+	uint16_t getIntensityAs16Bits(int plane, int i       ) const final;
+	uint16_t getIntensityAs16Bits(int plane, int x, int y) const final;
+	double   getIntensityAsDouble(int plane, int i       ) const final;
+	double   getIntensityAsDouble(int plane, int x, int y) const final;
+};
 };

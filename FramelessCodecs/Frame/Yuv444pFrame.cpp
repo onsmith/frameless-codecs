@@ -42,24 +42,24 @@ Yuv444pFrame& Yuv444pFrame::operator=(Frame& const src) {
 
 uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int i) const {
 	return intensityAt(plane, i);
-};
+}
 
 uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int x, int y) const {
 	return intensityAt(plane, x, y);
-};
+}
 
 uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int i) const {
 	return static_cast<uint16_t>(intensityAt(plane, i)) << 8;
-};
+}
 
 uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int x, int y) const {
 	return static_cast<uint16_t>(intensityAt(plane, x, y)) << 8;
-};
+}
 
 double Yuv444pFrame::getIntensityAsDouble(int plane, int i) const {
 	return static_cast<double>(intensityAt(plane, i)) / 0xFF;
-};
+}
 
 double Yuv444pFrame::getIntensityAsDouble(int plane, int x, int y) const {
 	return static_cast<double>(intensityAt(plane, x, y)) / 0xFF;
-};
+}

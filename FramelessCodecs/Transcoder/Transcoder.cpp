@@ -149,75 +149,6 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// Prepare function pointer to transcoding algorithm
-	void (*TranscodeAlgorithm)(Frame& const input, Frame& const output);
-
-	switch(input_format) {
-	case (FrameFormat::Gray16le):
-		switch(output_format) {
-		case (FrameFormat::GrayDouble):
-			TranscodeAlgorithm = [](Frame& const input, Frame& const output) {
-				static_cast<GrayDoubleFrame&>(output) = static_cast<Gray16leFrame&>(input);
-			};
-			break;
-		case (FrameFormat::Yuv444p):
-			break;
-		case (FrameFormat::Yuv422p):
-			break;
-		case (FrameFormat::Yuv420p):
-			break;
-		}
-		break;
-	case (FrameFormat::GrayDouble):
-		switch(output_format) {
-		case (FrameFormat::Gray16le):
-			break;
-		case (FrameFormat::Yuv444p):
-			break;
-		case (FrameFormat::Yuv422p):
-			break;
-		case (FrameFormat::Yuv420p):
-			break;
-		}
-		break;
-	case (FrameFormat::Yuv444p):
-		switch(output_format) {
-		case (FrameFormat::Gray16le):
-			break;
-		case (FrameFormat::GrayDouble):
-			break;
-		case (FrameFormat::Yuv422p):
-			break;
-		case (FrameFormat::Yuv420p):
-			break;
-		}
-		break;
-	case (FrameFormat::Yuv422p):
-		switch(output_format) {
-		case (FrameFormat::Gray16le):
-			break;
-		case (FrameFormat::GrayDouble):
-			break;
-		case (FrameFormat::Yuv444p):
-			break;
-		case (FrameFormat::Yuv420p):
-			break;
-		}
-		break;
-	case (FrameFormat::Yuv420p):
-		switch(output_format) {
-		case (FrameFormat::Gray16le):
-			break;
-		case (FrameFormat::GrayDouble):
-			break;
-		case (FrameFormat::Yuv444p):
-			break;
-		case (FrameFormat::Yuv422p):
-			break;
-		}
-		break;
-	}
-
 	// Open input file
 	ifstream input_file;
 	input_file.open(input_filename, ios::in | ios::binary);
@@ -254,8 +185,7 @@ int main(int argc, char *argv[]) {
 				<< ".."
 				<< endl;
 		}
-		//*output_frame = *input_frame;
-		TranscodeAlgorithm(*input_frame, *output_frame);
+		*output_frame = *input_frame;
 		output_frame->writeTo(output_file);
 	}
 

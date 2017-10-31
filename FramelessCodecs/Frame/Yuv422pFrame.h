@@ -1,15 +1,17 @@
 #pragma once
 
 #include "DataFrame.h"
-#include "Yuv422pFrame.h"
-#include "Yuv420pFrame.h"
-#include "GrayDoubleFrame.h"
-#include "Gray16leFrame.h"
 
 #include <cstdint>
 
 
-class Yuv422pFrame : public DataFrame<uint8_t> {
+/**
+ * Yuv444pFrame is a concrete implementation of the DataFrame<T> class, and
+ *   therefore defines the frame's intensity addressing scheme. A Yuv422pFrame
+ *   object represents a yuv color format, 8 bit color component depth,
+ *   planar-organized video frame with 4:2:2 chroma subsampling.
+ */
+class Yuv422pFrame final : public DataFrame<uint8_t> {
 private:
 	/*
 	** Stores the stride of each plane.
@@ -17,19 +19,12 @@ private:
 	int strides_[3];
 
 	/*
-	** Stores the memory offsets of each plane.
+	** Stores the memory offset of each plane.
 	*/
 	int offsets_[3];
 
 
 public:
-	/*
-	** Plane index constants.
-	*/
-	const static int Y_PLANE = 0;
-	const static int U_PLANE = 1;
-	const static int V_PLANE = 2;
-
 	/*
 	** Constructor.
 	*/
@@ -38,20 +33,27 @@ public:
 	/*
 	** Changes the dimensions of the frame.
 	*/
-	void resize(int width, int height);
+	void resize(int width, int height) final;
 
 	/*
 	** Exposes access to individual intensities in the frame.
 	*/
-	uint8_t& intensityAt(int i)                   const final;
-	uint8_t& intensityAt(int plane, int i)        const final;
-	uint8_t& intensityAt(int plane, int x, int y) const final;
+	uint8_t& intensityAt(int i) const;
+	uint8_t& intensityAt(int plane, int i) const;
+	uint8_t& intensityAt(int plane, int x, int y) const;
 
 	/*
-	** Overload the assignment operator for frame transcoding.
+	** Overload copy assignment operator.
 	*/
-	Yuv422pFrame& operator=(Yuv444pFrame& const);
-	Yuv422pFrame& operator=(Yuv420pFrame& const);
-	Yuv422pFrame& operator=(GrayDoubleFrame& const);
-	Yuv422pFrame& operator=(Gray16leFrame& const);
+	Yuv422pFrame& operator=(Frame& const src) final;
+
+	/*
+	** Methods to get an intensity value by specifying its location in the frame.
+	*/
+	uint8_t  getIntensityAsByte  (int plane, int i       ) const final;
+	uint8_t  getIntensityAsByte  (int plane, int x, int y) const final;
+	uint16_t getIntensityAs16Bits(int plane, int i       ) const final;
+	uint16_t getIntensityAs16Bits(int plane, int x, int y) const final;
+	double   getIntensityAsDouble(int plane, int i       ) const final;
+	double   getIntensityAsDouble(int plane, int x, int y) const final;
 };

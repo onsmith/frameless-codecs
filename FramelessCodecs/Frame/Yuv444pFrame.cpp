@@ -16,19 +16,19 @@ void Yuv444pFrame::resize(int width, int height) {
 	DataFrame::resize(width, height, 3*numPixels_);
 }
 
-uint8_t& Yuv444pFrame::intensityAt(int i) const {
+uint8_t& Yuv444pFrame::intensityAt(int i) {
 	return data()[i];
 }
 
-uint8_t& Yuv444pFrame::intensityAt(int plane, int i) const {
+uint8_t& Yuv444pFrame::intensityAt(int plane, int i) {
 	return intensityAt(plane*numPixels_ + i);
 }
 
-uint8_t& Yuv444pFrame::intensityAt(int plane, int x, int y) const {
+uint8_t& Yuv444pFrame::intensityAt(int plane, int x, int y) {
 	return intensityAt(plane, y*width() + x);
 }
 
-Yuv444pFrame& Yuv444pFrame::operator=(Frame& const src) {
+Yuv444pFrame& Yuv444pFrame::operator=(Frame& src) {
 	resize(src.width(), src.height());
 	for (int y = 0; y < height(); y++) {
 		for (int x = 0; x < width(); x++) {
@@ -40,26 +40,26 @@ Yuv444pFrame& Yuv444pFrame::operator=(Frame& const src) {
 	return *this;
 }
 
-uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int i) const {
+uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int i) {
 	return intensityAt(plane, i);
 }
 
-uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int x, int y) const {
+uint8_t Yuv444pFrame::getIntensityAsByte(int plane, int x, int y) {
 	return intensityAt(plane, x, y);
 }
 
-uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int i) const {
+uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int i) {
 	return static_cast<uint16_t>(intensityAt(plane, i)) << 8;
 }
 
-uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int x, int y) const {
+uint16_t Yuv444pFrame::getIntensityAs16Bits(int plane, int x, int y) {
 	return static_cast<uint16_t>(intensityAt(plane, x, y)) << 8;
 }
 
-double Yuv444pFrame::getIntensityAsDouble(int plane, int i) const {
+double Yuv444pFrame::getIntensityAsDouble(int plane, int i) {
 	return static_cast<double>(intensityAt(plane, i)) / 0xFF;
 }
 
-double Yuv444pFrame::getIntensityAsDouble(int plane, int x, int y) const {
+double Yuv444pFrame::getIntensityAsDouble(int plane, int x, int y) {
 	return static_cast<double>(intensityAt(plane, x, y)) / 0xFF;
 }

@@ -19,22 +19,22 @@ void Yuv420pFrame::resize(int width, int height) {
 	offsets_[V_PLANE] = (width*height)/4*5;
 }
 
-uint8_t& Yuv420pFrame::intensityAt(int i) const {
+uint8_t& Yuv420pFrame::intensityAt(int i) {
 	return data()[i];
 }
 
-uint8_t& Yuv420pFrame::intensityAt(int plane, int i) const {
+uint8_t& Yuv420pFrame::intensityAt(int plane, int i) {
 	return intensityAt(offsets_[plane] + i);
 }
 
-uint8_t& Yuv420pFrame::intensityAt(int plane, int x, int y) const {
+uint8_t& Yuv420pFrame::intensityAt(int plane, int x, int y) {
 	return intensityAt(plane, y/2 * strides_[plane] + x/2);
 }
 
-Yuv420pFrame& Yuv420pFrame::operator=(Frame& const src) {
+Yuv420pFrame& Yuv420pFrame::operator=(Frame& src) {
 	resize(src.width(), src.height());
-	for (int y = 0; y < height(); y++) {
-		for (int x = 0; x < width(); x++) {
+	for (int y = 0; y < height(); y += 2) {
+		for (int x = 0; x < width(); x += 2) {
 			intensityAt(Y_PLANE, x, y) = src.getIntensityAsByte(Y_PLANE, x, y);
 			intensityAt(U_PLANE, x, y) = src.getIntensityAsByte(U_PLANE, x, y);
 			intensityAt(V_PLANE, x, y) = src.getIntensityAsByte(V_PLANE, x, y);
@@ -43,26 +43,26 @@ Yuv420pFrame& Yuv420pFrame::operator=(Frame& const src) {
 	return *this;
 }
 
-uint8_t Yuv420pFrame::getIntensityAsByte(int plane, int i) const {
+uint8_t Yuv420pFrame::getIntensityAsByte(int plane, int i) {
 	return intensityAt(plane, i);
 }
 
-uint8_t Yuv420pFrame::getIntensityAsByte(int plane, int x, int y) const {
+uint8_t Yuv420pFrame::getIntensityAsByte(int plane, int x, int y) {
 	return intensityAt(plane, x, y);
 }
 
-uint16_t Yuv420pFrame::getIntensityAs16Bits(int plane, int i) const {
+uint16_t Yuv420pFrame::getIntensityAs16Bits(int plane, int i) {
 	return static_cast<uint16_t>(intensityAt(plane, i)) << 8;
 }
 
-uint16_t Yuv420pFrame::getIntensityAs16Bits(int plane, int x, int y) const {
+uint16_t Yuv420pFrame::getIntensityAs16Bits(int plane, int x, int y) {
 	return static_cast<uint16_t>(intensityAt(plane, x, y)) << 8;
 }
 
-double Yuv420pFrame::getIntensityAsDouble(int plane, int i) const {
+double Yuv420pFrame::getIntensityAsDouble(int plane, int i) {
 	return static_cast<double>(intensityAt(plane, i)) / 0xFF;
 }
 
-double Yuv420pFrame::getIntensityAsDouble(int plane, int x, int y) const {
+double Yuv420pFrame::getIntensityAsDouble(int plane, int x, int y) {
 	return static_cast<double>(intensityAt(plane, x, y)) / 0xFF;
 }

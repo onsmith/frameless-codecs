@@ -63,7 +63,7 @@ Frame* CreateFrame(int width, int height, FrameFormat frame_format) {
 
 
 /*
-** Lookup function for a frame format.
+** Lookup function for frame formats.
 */
 FrameFormat LookupFrameFormat(const char* const frame_format) {
 	if (strcmp(frame_format, "gray16le") == 0) {

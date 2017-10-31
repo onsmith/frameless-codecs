@@ -38,22 +38,22 @@ public:
 	/*
 	** Exposes access to individual intensities in the frame.
 	*/
-	uint8_t& intensityAt(int i) const;
-	uint8_t& intensityAt(int plane, int i) const;
-	uint8_t& intensityAt(int plane, int x, int y) const;
+	uint8_t& intensityAt(int i);
+	uint8_t& intensityAt(int plane, int i);
+	uint8_t& intensityAt(int plane, int x, int y);
 
 	/*
 	** Overload copy assignment operator.
 	*/
-	Yuv422pFrame& operator=(Frame& const src) final;
+	Yuv422pFrame& operator=(Frame& src) final;
 
 	/*
 	** Methods to get an intensity value by specifying its location in the frame.
 	*/
-	uint8_t  getIntensityAsByte  (int plane, int i       ) const final;
-	uint8_t  getIntensityAsByte  (int plane, int x, int y) const final;
-	uint16_t getIntensityAs16Bits(int plane, int i       ) const final;
-	uint16_t getIntensityAs16Bits(int plane, int x, int y) const final;
-	double   getIntensityAsDouble(int plane, int i       ) const final;
-	double   getIntensityAsDouble(int plane, int x, int y) const final;
+	uint8_t  getIntensityAsByte  (int plane, int i       ) final;
+	uint8_t  getIntensityAsByte  (int plane, int x, int y) final;
+	uint16_t getIntensityAs16Bits(int plane, int i       ) final;
+	uint16_t getIntensityAs16Bits(int plane, int x, int y) final;
+	double   getIntensityAsDouble(int plane, int i       ) final;
+	double   getIntensityAsDouble(int plane, int x, int y) final;
 };

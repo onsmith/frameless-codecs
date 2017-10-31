@@ -48,14 +48,14 @@ public:
 	/*
 	** Gets the number of intensities stored by the frame.
 	*/
-	int size() const final {
+	size_t size() const final {
 		return data_.size();
 	}
 
 	/*
 	** Gets a pointer to the underlying data managed by the frame object.
 	*/
-	intensity_t* data() const {
+	intensity_t* data() {
 		return data_.data();
 	}
 

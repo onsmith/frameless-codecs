@@ -54,22 +54,22 @@ public:
 	/*
 	** Gets the number of intensities stored by the frame.
 	*/
-	virtual int size() const = 0;
+	virtual size_t size() const = 0;
 
 	/*
 	** Methods to get an intensity value by specifying its location in the frame.
 	*/
-	virtual uint8_t  getIntensityAsByte  (int plane, int i       ) const = 0;
-	virtual uint8_t  getIntensityAsByte  (int plane, int x, int y) const = 0;
-	virtual uint16_t getIntensityAs16Bits(int plane, int i       ) const = 0;
-	virtual uint16_t getIntensityAs16Bits(int plane, int x, int y) const = 0;
-	virtual double   getIntensityAsDouble(int plane, int i       ) const = 0;
-	virtual double   getIntensityAsDouble(int plane, int x, int y) const = 0;
+	virtual uint8_t  getIntensityAsByte  (int plane, int i       ) = 0;
+	virtual uint8_t  getIntensityAsByte  (int plane, int x, int y) = 0;
+	virtual uint16_t getIntensityAs16Bits(int plane, int i       ) = 0;
+	virtual uint16_t getIntensityAs16Bits(int plane, int x, int y) = 0;
+	virtual double   getIntensityAsDouble(int plane, int i       ) = 0;
+	virtual double   getIntensityAsDouble(int plane, int x, int y) = 0;
 
 	/*
 	** Overload copy assignment operator.
 	*/
-	virtual Frame& operator=(Frame& const src) = 0;
+	virtual Frame& operator=(Frame& src) = 0;
 
 	/*
 	** Reads data from an istream directly into the frame.

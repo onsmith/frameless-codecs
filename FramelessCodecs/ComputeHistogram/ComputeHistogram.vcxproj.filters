@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="compute-intensity-histogram.c">
+    <ClCompile Include="ComputeHistogram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,13 +5,13 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransformIntensity", "TransformIntensity\TransformIntensity.vcxproj", "{12DD1011-D4EF-418A-99E6-14EDE9EFC913}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeIntensityHistogram", "ComputeIntensityHistogram\ComputeIntensityHistogram.vcxproj", "{A245D04B-9F9B-4B16-AF47-4E350423032E}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MatchIntensityHistogram", "MatchIntensityHistogram\MatchIntensityHistogram.vcxproj", "{96316164-48C4-4610-8727-A2F730A6BA67}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Downsampler", "Downsampler\Downsampler.vcxproj", "{821C56FE-5C18-4F50-BF60-F9FB444611A8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Transcoder", "Transcoder\Transcoder.vcxproj", "{29EEAE0B-CE62-496E-967F-D6D985BFD1DF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeHistogram", "ComputeHistogram\ComputeHistogram.vcxproj", "{6018F4A9-BFA0-4803-B9C6-637D5B03171F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +29,6 @@ Global
 		{12DD1011-D4EF-418A-99E6-14EDE9EFC913}.Release|x64.Build.0 = Release|x64
 		{12DD1011-D4EF-418A-99E6-14EDE9EFC913}.Release|x86.ActiveCfg = Release|Win32
 		{12DD1011-D4EF-418A-99E6-14EDE9EFC913}.Release|x86.Build.0 = Release|Win32
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Debug|x64.ActiveCfg = Debug|x64
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Debug|x64.Build.0 = Debug|x64
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Debug|x86.ActiveCfg = Debug|Win32
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Debug|x86.Build.0 = Debug|Win32
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Release|x64.ActiveCfg = Release|x64
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Release|x64.Build.0 = Release|x64
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Release|x86.ActiveCfg = Release|Win32
-		{A245D04B-9F9B-4B16-AF47-4E350423032E}.Release|x86.Build.0 = Release|Win32
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Debug|x64.ActiveCfg = Debug|x64
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Debug|x64.Build.0 = Debug|x64
 		{96316164-48C4-4610-8727-A2F730A6BA67}.Debug|x86.ActiveCfg = Debug|Win32
@@ -61,6 +53,14 @@ Global
 		{29EEAE0B-CE62-496E-967F-D6D985BFD1DF}.Release|x64.Build.0 = Release|x64
 		{29EEAE0B-CE62-496E-967F-D6D985BFD1DF}.Release|x86.ActiveCfg = Release|Win32
 		{29EEAE0B-CE62-496E-967F-D6D985BFD1DF}.Release|x86.Build.0 = Release|Win32
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Debug|x64.ActiveCfg = Debug|x64
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Debug|x64.Build.0 = Debug|x64
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Debug|x86.ActiveCfg = Debug|Win32
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Debug|x86.Build.0 = Debug|Win32
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Release|x64.ActiveCfg = Release|x64
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Release|x64.Build.0 = Release|x64
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Release|x86.ActiveCfg = Release|Win32
+		{6018F4A9-BFA0-4803-B9C6-637D5B03171F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

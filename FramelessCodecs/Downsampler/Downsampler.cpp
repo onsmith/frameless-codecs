@@ -2,8 +2,9 @@
  * Name: Downsampler.cpp
  * Purpose: Downsamples a raw video file encoded in gray16le format, producing
  *   a new gray16le video file with half the vertical and horizontal
- *   resolution. Adds adjacent pixel intensities together when performing
- *   downsampling without regard for overflow.
+ *   resolution. Bitshifts every intensity value two places to the right to
+ *   avoid overflow and adds adjacent pixel intensities together when
+ *   performing downsampling.
  */
 
 

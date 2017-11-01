@@ -9,12 +9,20 @@ void GrayDoubleFrame::resize(int width, int height) {
 	DataFrame::resize(width, height, width*height);
 }
 
-double& GrayDoubleFrame::intensityAt(int i) {
+double& GrayDoubleFrame::operator()(int i) {
 	return data()[i];
 }
 
-double& GrayDoubleFrame::intensityAt(int x, int y) {
+double& GrayDoubleFrame::operator()(int x, int y) {
 	return intensityAt(y*width() + x);
+}
+
+double& GrayDoubleFrame::intensityAt(int i) {
+	return this->operator()(i);
+}
+
+double& GrayDoubleFrame::intensityAt(int x, int y) {
+	return this->operator()(x, y);
 }
 
 GrayDoubleFrame& GrayDoubleFrame::operator=(Frame& src) {

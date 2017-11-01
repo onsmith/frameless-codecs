@@ -18,8 +18,10 @@ public:
 	/*
 	** Exposes access to individual intensities in the frame.
 	*/
-	double& intensityAt(int i);
-	double& intensityAt(int x, int y);
+	double& intensityAt(int i);        // DEPRECATED
+	double& intensityAt(int x, int y); // DEPRECATED
+	double& operator()(int i);
+	double& operator()(int x, int y);
 
 	/*
 	** Overload copy assignment operator.

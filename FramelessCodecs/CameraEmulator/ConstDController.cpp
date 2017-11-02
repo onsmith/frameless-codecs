@@ -1,14 +1,14 @@
 #include "ConstDController.h"
 
 
-ConstDController::ConstDController(decimation_t d) :
+ConstDController::ConstDController(DController::decimation_t d) :
 	d(d) {
 }
 
-ConstDController::decimation_t ConstDController::init(int x, int y) {
+DController::decimation_t ConstDController::initD(int x, int y) {
 	return d;
 }
 
-ConstDController::decimation_t ConstDController::next(int x, int y, ConstDController::timedelta_t last_dt) {
+DController::decimation_t ConstDController::nextD(int x, int y, DController::decimation_t last_d, DController::timedelta_t last_dt) {
 	return d;
 }

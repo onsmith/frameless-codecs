@@ -22,7 +22,7 @@ private:
 	/*
 	** Frames per second.
 	*/
-	const long unsigned int fps;
+	const long int fps;
 
 	/*
 	** Ticks per second.
@@ -32,12 +32,12 @@ private:
 	/*
 	** Ticks per frame.
 	*/
-	const long unsigned int tpf;
+	const long int tpf;
 
 	/*
-	** Ticks per frame.
+	** Decimation controller.
 	*/
-	DController &tpf;
+	DController &dController;
 
 
 public:
@@ -47,7 +47,7 @@ public:
 	FramedCameraEmulator(int width, int height, int fps, int tps);
 
 	/*
-	** Main method that runs the emulator.
+	** Main method that runs the emulator; returns number of frames read.
 	*/
-	void emulate(istream& input, ostream& output) const;
+	int emulate(istream& input, ostream& output) const;
 };

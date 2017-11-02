@@ -23,11 +23,14 @@
     <ClInclude Include="ConstDController.h" />
     <ClInclude Include="DController.h" />
     <ClInclude Include="FramedCameraEmulator.h" />
+    <ClInclude Include="PixelTracker.h" />
+    <ClInclude Include="TargetDController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
     <ClCompile Include="ConstDController.cpp" />
     <ClCompile Include="FramedCameraEmulator.cpp" />
+    <ClCompile Include="TargetDController.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

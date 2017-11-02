@@ -10,17 +10,21 @@ private:
 	*/
 	const decimation_t d;
 
-	/*
-	** Initialize a pixel's D value.
-	*/
-	decimation_t init(int x, int y);
-
-	/*
-	** Changes a pixel's D value given the prior D value.
-	*/
-	decimation_t next(int x, int y, timedelta_t last_dt);
 
 public:
+	/*
+	** Gets a pixel's initial d value.
+	*/
+	decimation_t initD(int x, int y) final;
+
+	/*
+	** Gets a pixel's next d value given the prior (d, dt) for that pixel.
+	*/
+	decimation_t nextD(int x, int y, decimation_t last_d, timedelta_t last_dt) final;
+
+	/*
+	** Constructor.
+	*/
 	ConstDController(decimation_t d);
 };
 

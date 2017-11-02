@@ -27,6 +27,12 @@
     <ClInclude Include="ConstDController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TargetDController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FramedCameraEmulator.cpp">
@@ -36,6 +42,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ConstDController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetDController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

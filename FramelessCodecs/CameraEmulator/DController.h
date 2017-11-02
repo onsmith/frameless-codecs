@@ -2,19 +2,11 @@
 
 #include <cstdint>
 
+#include "DataTypes.h"
+
 
 class DController {
 public:
-	/*
-	** Data type for a d value.
-	*/
-	typedef uint8_t decimation_t;
-
-	/*
-	** Data type for a dt value.
-	*/
-	typedef uint8_t timedelta_t;
-
 	/*
 	** Gets a pixel's initial d value.
 	*/

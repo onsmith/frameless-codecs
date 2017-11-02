@@ -21,9 +21,13 @@
   <ItemGroup>
     <ClInclude Include="..\Frame\GrayDoubleFrame.h" />
     <ClInclude Include="ConstDController.h" />
+    <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DController.h" />
     <ClInclude Include="FramedCameraEmulator.h" />
+    <ClInclude Include="PixelFire.h" />
     <ClInclude Include="PixelTracker.h" />
+    <ClInclude Include="Sink.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="TargetDController.h" />
   </ItemGroup>
   <ItemGroup>

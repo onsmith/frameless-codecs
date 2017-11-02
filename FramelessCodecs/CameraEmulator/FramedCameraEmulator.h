@@ -4,6 +4,11 @@
 using std::istream;
 using std::ostream;
 
+#include "DataTypes.h"
+#include "Source.h"
+#include "Sink.h"
+#include "PixelFire.h"
+#include "PixelTracker.h"
 #include "DController.h"
 
 
@@ -39,12 +44,25 @@ private:
 	*/
 	DController &dController;
 
+	/*
+	** Vector of PixelTracker objects, storing pixel information.
+	*/
+	vector<PixelTracker> pixels;
+
 
 public:
 	/*
 	** Constructor.
 	*/
-	FramedCameraEmulator(int width, int height, int fps, int tps);
+	FramedCameraEmulator(
+		int width,
+		int height,
+		int ticks_per_second,
+		int frames_per_second,
+		Source<GrayDoubleFrame> input,
+		Sink<PixelFire> output,
+		DController& dController
+	);
 
 	/*
 	** Main method that runs the emulator; returns number of frames read.

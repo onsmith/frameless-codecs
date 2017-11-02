@@ -1,31 +1,32 @@
 #pragma once
 
+#include "DataTypes.h"
+
 
 struct PixelTracker {
 public:
 	/*
 	** The pixel's coordinates in the 2D frame.
 	*/
-	int x, y;
+	coordinate_t x, y;
 
 	/*
 	** The pixel's current decimation value.
 	*/
-	unsigned int d;
+	decimation_t d;
 
 	/*
 	** The timestamp when the pixel was last fired.
 	*/
-	unsigned long int t;
+	timestamp_t t;
 
 	/*
 	** The amount of light accumulated by the pixel.
 	*/
-	double accumulated_light;
+	light_t accumulated_light;
 
 	/*
 	** The amount of light that must be accumulated before the pixel fires.
 	*/
-	double target_light;
+	light_t target_light;
 };
-

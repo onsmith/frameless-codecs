@@ -4,5 +4,5 @@
 template <typename T>
 class Sink {
 public:
-	virtual write(T) = 0;
+	virtual void write(T&) = 0;
 };

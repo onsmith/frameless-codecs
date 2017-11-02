@@ -15,14 +15,9 @@ using std::ostream;
 class FramedCameraEmulator {
 private:
 	/*
-	** Frame width.
+	** Ticks per second.
 	*/
-	const int width;
-
-	/*
-	** Frame height.
-	*/
-	const int height;
+	const long unsigned int tps;
 
 	/*
 	** Frames per second.
@@ -30,14 +25,19 @@ private:
 	const long int fps;
 
 	/*
-	** Ticks per second.
-	*/
-	const long unsigned int tps;
-
-	/*
 	** Ticks per frame.
 	*/
 	const long int tpf;
+
+	/*
+	** Input source.
+	*/
+	Source<GrayDoubleFrame>& input;
+
+	/*
+	** Output sink.
+	*/
+	Sink<PixelFire>& output;
 
 	/*
 	** Decimation controller.
@@ -49,6 +49,29 @@ private:
 	*/
 	vector<PixelTracker> pixels;
 
+	/*
+	** The current time, stored as a number of ticks since the video started.
+	*/
+	timestamp_t t;
+
+	/*
+	** Buffers frames of intensity data from the Source object.
+	*/
+	GrayDoubleFrame frame;
+
+	/*
+	** Initializes all internal PixelTracker objects.
+	*/
+	void initPixelTrackers();
+
+	/*
+	** Convenience methods to get the width, height, and number of pixels in the
+	**   scene.
+	*/
+	int width() const;
+	int height() const;
+	int numPixels() const;
+
 
 public:
 	/*
@@ -59,13 +82,13 @@ public:
 		int height,
 		int ticks_per_second,
 		int frames_per_second,
-		Source<GrayDoubleFrame> input,
-		Sink<PixelFire> output,
+		Source<GrayDoubleFrame>& input,
+		Sink<PixelFire>& output,
 		DController& dController
 	);
 
 	/*
-	** Main method that runs the emulator; returns number of frames read.
+	** Pulls a frame from the Source, emulates it, and emits PixelFire objects.
 	*/
-	int emulate(istream& input, ostream& output) const;
+	void emulateFrame();
 };

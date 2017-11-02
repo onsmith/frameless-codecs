@@ -3,41 +3,30 @@
 #include "PixelTracker.h"
 #include "Frame/GrayDoubleFrame.h"
 
-#include <fstream>
-using std::istream;
-using std::ostream;
-
 #include <vector>
 using std::vector;
 
+#include <iostream>
+using std::istream;
 
-FramedCameraEmulator::FramedCameraEmulator(
-	int width,
-	int height,
-	int ticks_per_second,
-	int frames_per_second,
-	Source<GrayDoubleFrame>& input,
-	Sink<PixelFire>& output,
-	DController& dController
-) :
-	tps(ticks_per_second),
-	fps(frames_per_second),
-	input(input),
-	output(output),
-	dController(dController),
-	pixels(width*height),
-	t(0),
-	frame(width, height),
-	tpf(ticks_per_second / frames_per_second) {
-	initPixelTrackers();
+
+FramedCameraEmulator::FramedCameraEmulator(istream& input, int width, int height, int fps) :
+	t(0),                      // Time tick counter
+	fps(fps),                  // Frames per second
+	dControl(5),               // Constant D controller
+	input(input),              // Input data source
+	pixels(width*height),      // Array of PixelTracker objects
+	frame(width, height),      // GrayDoubleFrame input buffer object
+	tpf(tps / fps) {           // Ticks per frame
+	initializePixelTrackers();
 }
 
-void FramedCameraEmulator::initPixelTrackers() {
+void FramedCameraEmulator::initializePixelTrackers() {
 	for (int i = 0; i < numPixels(); i++) {
 		PixelTracker pixel = pixels[i];
 		pixel.x                 = (i % width());
 		pixel.y                 = (i / width());
-		pixel.d                 = dController.initD(pixel.x, pixel.y);
+		pixel.d                 = dControl.initD(pixel.x, pixel.y);
 		pixel.t                 = 0;
 		pixel.target_light      = static_cast<light_t>(1 << pixel.d);
 		pixel.accumulated_light = 0.0;
@@ -65,17 +54,17 @@ void FramedCameraEmulator::emulateFrame() {
 		frame(j) /= static_cast<light_t>(tps);
 	}
 
-	// Loop through ticks (i) and pixels (j),
-	//   accumulating light and emitting pixel fires
+	// Loop through ticks (i) over time and pixels (j) over space, accumulating
+	//   light and emitting pixel fires as necessary
 	for (int i = 0; i < tpf; i++, t++) {
 		for (int j = 0; j < numPixels(); j++) {
 				PixelTracker pixel = pixels[j];
 				pixel.accumulated_light += frame(j);
 				if (pixel.accumulated_light > pixel.target_light) {
-					unsigned long int dt = t - pixel.t;
-					// emit pixel (pixel.x, pixel.y, pixel.d, dt)
+					timedelta_t dt = t - pixel.t;
+					output.write(PixelFire(pixel.x, pixel.y, pixel.d, dt));
 					pixel.t = t;
-					pixel.d = dController.nextD(pixel.x, pixel.y, pixel.d, dt);
+					pixel.d = dControl.nextD(pixel.x, pixel.y, pixel.d, dt);
 					pixel.accumulated_light -= pixel.target_light;
 					pixel.target_light = static_cast<double>(1 << pixel.d);
 			}

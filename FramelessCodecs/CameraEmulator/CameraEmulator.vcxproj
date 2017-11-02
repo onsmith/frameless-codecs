@@ -24,7 +24,10 @@
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DController.h" />
     <ClInclude Include="FramedCameraEmulator.h" />
+    <ClInclude Include="GrayDoubleFrameStreamSource.h" />
     <ClInclude Include="PixelFire.h" />
+    <ClInclude Include="PixelFireConsoleSink.h" />
+    <ClInclude Include="PixelFireStreamSink.h" />
     <ClInclude Include="PixelTracker.h" />
     <ClInclude Include="Sink.h" />
     <ClInclude Include="Source.h" />
@@ -34,6 +37,10 @@
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
     <ClCompile Include="ConstDController.cpp" />
     <ClCompile Include="FramedCameraEmulator.cpp" />
+    <ClCompile Include="GrayDoubleFrameStreamSource.cpp" />
+    <ClCompile Include="PixelFire.cpp" />
+    <ClCompile Include="PixelFireConsoleSink.cpp" />
+    <ClCompile Include="PixelFireStreamSink.cpp" />
     <ClCompile Include="TargetDController.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

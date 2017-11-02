@@ -2,14 +2,13 @@
 
 #include <fstream>
 using std::istream;
-using std::ostream;
 
 #include "DataTypes.h"
-#include "Source.h"
-#include "Sink.h"
 #include "PixelFire.h"
 #include "PixelTracker.h"
-#include "DController.h"
+#include "ConstDController.h"
+#include "GrayDoubleFrameStreamSource.h"
+#include "PixelFireConsoleSink.h"
 
 
 class FramedCameraEmulator {
@@ -17,7 +16,7 @@ private:
 	/*
 	** Ticks per second.
 	*/
-	const long unsigned int tps;
+	static const long unsigned int tps = 4000;
 
 	/*
 	** Frames per second.
@@ -32,17 +31,17 @@ private:
 	/*
 	** Input source.
 	*/
-	Source<GrayDoubleFrame>& input;
+	GrayDoubleFrameStreamSource input;
 
 	/*
 	** Output sink.
 	*/
-	Sink<PixelFire>& output;
+	PixelFireConsoleSink output;
 
 	/*
 	** Decimation controller.
 	*/
-	DController &dController;
+	ConstDController dControl;
 
 	/*
 	** Vector of PixelTracker objects, storing pixel information.
@@ -62,7 +61,7 @@ private:
 	/*
 	** Initializes all internal PixelTracker objects.
 	*/
-	void initPixelTrackers();
+	void initializePixelTrackers();
 
 	/*
 	** Convenience methods to get the width, height, and number of pixels in the
@@ -78,13 +77,10 @@ public:
 	** Constructor.
 	*/
 	FramedCameraEmulator(
+		istream& input,
 		int width,
 		int height,
-		int ticks_per_second,
-		int frames_per_second,
-		Source<GrayDoubleFrame>& input,
-		Sink<PixelFire>& output,
-		DController& dController
+		int fps
 	);
 
 	/*

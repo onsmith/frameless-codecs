@@ -18,7 +18,7 @@ public:
 	/*
 	** The timestamp when the pixel was last fired.
 	*/
-	timestamp_t t;
+	timestamp_t last_fire_time;
 
 	/*
 	** The amount of light accumulated by the pixel.

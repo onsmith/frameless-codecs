@@ -9,5 +9,5 @@ public:
 	/*
 	** Writes a PixelFire object to cout.
 	*/
-	void write(const PixelFire&) final;
+	void write(PixelFire&) final;
 };

@@ -17,6 +17,8 @@ using std::ios;
 
 #include <cstdint>
 
+#include "FramelessStreamFramifier.h"
+
 
 /*
 ** Prints the program usage to the given output stream.
@@ -83,7 +85,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Create emulator object
-	FramedCameraEmulator emulator(
+	FramelessStreamFramifier framifier(
 		input_file,
 		output_file,
 		frame_width,
@@ -96,11 +98,11 @@ int main(int argc, char *argv[]) {
 	while (input_file.good()) {
 		frame_count++;
 		cout
-			<< "Emulating frame number "
+			<< "Framifying frame number "
 			<< frame_count
 			<< ".."
 			<< endl;
-		emulator.emulateFrame();
+		framifier.framifyPixelFires();
 	}
 
 	// Close files
@@ -110,7 +112,7 @@ int main(int argc, char *argv[]) {
 	// All done
 	cout << "Done! "
 		<< frame_count
-		<< " frames emulated."
+		<< " frames produced."
 		<< endl;
 	getchar();
 	return 0;

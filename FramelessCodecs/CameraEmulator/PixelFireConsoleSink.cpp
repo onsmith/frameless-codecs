@@ -5,7 +5,7 @@ using std::cout;
 using std::endl;
 
 
-void PixelFireConsoleSink::write(const PixelFire &pf) {
+void PixelFireConsoleSink::write(PixelFire &pf) {
 	cout
 		<< "("
 		<< static_cast<int>(pf.x) << ", "

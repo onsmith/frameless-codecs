@@ -113,17 +113,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\CameraEmulator\PixelFire.cpp" />
+    <ClCompile Include="..\Frame\Frame.cpp" />
+    <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
     <ClCompile Include="FramelessStreamFramifier.cpp" />
     <ClCompile Include="Framifier.cpp" />
     <ClCompile Include="GrayDoubleFrameStreamSink.cpp" />
+    <ClCompile Include="PixelFireStreamSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CameraEmulator\DataTypes.h" />
     <ClInclude Include="..\CameraEmulator\PixelFire.h" />
     <ClInclude Include="..\CameraEmulator\Sink.h" />
     <ClInclude Include="..\CameraEmulator\Source.h" />
+    <ClInclude Include="..\Frame\GrayDoubleFrame.h" />
     <ClInclude Include="FramelessStreamFramifier.h" />
     <ClInclude Include="GrayDoubleFrameStreamSink.h" />
+    <ClInclude Include="PixelFireStreamSource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

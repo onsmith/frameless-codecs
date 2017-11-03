@@ -7,7 +7,7 @@ PixelFireStreamSink::PixelFireStreamSink(ostream &stream) :
 	stream(stream) {
 }
 
-void PixelFireStreamSink::write(const PixelFire &pf) {
+void PixelFireStreamSink::write(PixelFire &pf) {
 	uint16_t dt = pf.dt;
 	stream.write(reinterpret_cast<const char*>(&pf.x), sizeof(pf.x));
 	stream.write(reinterpret_cast<const char*>(&pf.y), sizeof(pf.y));

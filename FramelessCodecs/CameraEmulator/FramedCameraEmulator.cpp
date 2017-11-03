@@ -58,8 +58,8 @@ void FramedCameraEmulator::emulateFrame() {
 
 	// Scale intensities
 	for (int j = 0; j < numPixels(); j++) {
-		frame(j) *= (0x1 << 14); // Scale up values
-		frame(j) += 1;           // Zero intensity not allowed
+		frame(j) *= (0x1 << 14); // Arbitrarily scale values
+		frame(j) += 1;           // Zero intensity pixels are disallowed
 		frame(j) /= tps;         // Turn intensity into the amount of light gathered per tick
 	}
 

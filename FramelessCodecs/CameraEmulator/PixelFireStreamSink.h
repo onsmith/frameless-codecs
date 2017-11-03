@@ -24,5 +24,5 @@ public:
 	/*
 	** Writes a PixelFire object to the ostream.
 	*/
-	void write(PixelFire&) final;
+	void write(const PixelFire&) final;
 };

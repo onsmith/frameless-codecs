@@ -34,7 +34,9 @@
     <ClInclude Include="TargetDController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Frame\Frame.cpp" />
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
+    <ClCompile Include="CameraEmulator.cpp" />
     <ClCompile Include="ConstDController.cpp" />
     <ClCompile Include="FramedCameraEmulator.cpp" />
     <ClCompile Include="GrayDoubleFrameStreamSource.cpp" />

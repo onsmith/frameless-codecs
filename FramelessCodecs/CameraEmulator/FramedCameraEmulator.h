@@ -8,16 +8,11 @@ using std::istream;
 #include "PixelTracker.h"
 #include "ConstDController.h"
 #include "GrayDoubleFrameStreamSource.h"
-#include "PixelFireConsoleSink.h"
+#include "PixelFireStreamSink.h"
 
 
 class FramedCameraEmulator {
 private:
-	/*
-	** Ticks per second.
-	*/
-	static const long unsigned int tps = 4000;
-
 	/*
 	** Frames per second.
 	*/
@@ -36,7 +31,7 @@ private:
 	/*
 	** Output sink.
 	*/
-	PixelFireConsoleSink output;
+	PixelFireStreamSink output;
 
 	/*
 	** Decimation controller.
@@ -69,15 +64,21 @@ private:
 	*/
 	int width() const;
 	int height() const;
-	int numPixels() const;
+	size_t numPixels() const;
 
 
 public:
+	/*
+	** Ticks per second.
+	*/
+	static const long unsigned int tps = (0x1 << 14);
+
 	/*
 	** Constructor.
 	*/
 	FramedCameraEmulator(
 		istream& input,
+		ostream& output,
 		int width,
 		int height,
 		int fps

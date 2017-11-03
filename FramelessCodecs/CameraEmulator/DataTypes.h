@@ -3,9 +3,10 @@
 #include <cstdint>
 
 /*
-** Represents an x or y coordinate of a pixel within a frame.
+** Represents an x or y coordinate of a pixel within a frame. Needs 12 bits per
+**   coordinate to store 4k addresses.
 */
-typedef int coordinate_t;
+typedef uint16_t coordinate_t;
 
 /*
 ** Represents a decimation value.

@@ -16,11 +16,6 @@ public:
 	decimation_t d;
 
 	/*
-	** The timestamp when the pixel was last fired.
-	*/
-	timestamp_t t;
-
-	/*
 	** The amount of light accumulated by the pixel.
 	*/
 	light_t accumulated_light;
@@ -29,4 +24,14 @@ public:
 	** The amount of light that must be accumulated before the pixel fires.
 	*/
 	light_t target_light;
+
+	/*
+	** The timestamp when the pixel was last fired.
+	*/
+	timestamp_t last_fire_time;
+
+	/*
+	** The time at which the pixel next fires (for use with priority queue).
+	*/
+	timestamp_t next_fire_time;
 };

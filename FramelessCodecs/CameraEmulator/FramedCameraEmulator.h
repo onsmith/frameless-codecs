@@ -8,6 +8,7 @@ using std::istream;
 #include "PixelTracker.h"
 #include "ConstDController.h"
 #include "GrayDoubleFrameStreamSource.h"
+#include "PixelFireConsoleSink.h"
 #include "PixelFireStreamSink.h"
 
 
@@ -31,7 +32,8 @@ private:
 	/*
 	** Output sink.
 	*/
-	PixelFireStreamSink output;
+	//PixelFireStreamSink output;
+	PixelFireConsoleSink output;
 
 	/*
 	** Decimation controller.
@@ -65,6 +67,17 @@ private:
 	int width() const;
 	int height() const;
 	size_t numPixels() const;
+
+	/*
+	** Emits a PixelFire for a given pixel to the output stream and updates
+	**   internal tracking parameters.
+	*/
+	void firePixel(PixelTracker&);
+
+	/*
+	** TODO
+	*/
+	bool FramedCameraEmulator::accumulateLight(PixelTracker&, light_t, timedelta_t);
 
 
 public:

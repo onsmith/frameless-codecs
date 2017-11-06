@@ -69,10 +69,15 @@ private:
 	size_t numPixels() const;
 
 	/*
-	** Fires a given pixel, creating a new PixelFire object and sending it to the
-	**   output sink.
+	** Fires a given pixel at a given time, creating a new PixelFire object and
+	**   sending it to the output sink.
 	*/
-	void firePixel(PixelTracker&);
+	void firePixel(PixelTracker&, timestamp_t);
+
+	/*
+	** TODO
+	*/
+	inline timedelta_t timestepsUntilNextFire(const PixelTracker&, light_t) const;
 
 
 public:

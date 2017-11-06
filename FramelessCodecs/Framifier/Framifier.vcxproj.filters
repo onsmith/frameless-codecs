@@ -27,13 +27,16 @@
     <ClCompile Include="GrayDoubleFrameStreamSink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PixelFireStreamSource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Frame\Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrderedPixelFireStreamSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Intensity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +59,13 @@
     <ClInclude Include="GrayDoubleFrameStreamSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PixelFireStreamSource.h">
+    <ClInclude Include="..\Frame\GrayDoubleFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Frame\GrayDoubleFrame.h">
+    <ClInclude Include="OrderedPixelFireStreamSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Intensity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

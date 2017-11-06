@@ -8,6 +8,8 @@ using std::vector;
 
 #include <iostream>
 using std::istream;
+using std::cout;
+using std::endl;
 
 
 #define CONSTANT_D 8
@@ -63,25 +65,35 @@ void FramedCameraEmulator::emulateFrame() {
 		frame(j) /= tps;         // Turn intensity into the amount of light gathered per tick
 	}
 
-	// Loop through ticks (i) over time and pixels (j) over space, accumulating
-	//   light and emitting pixel fires as necessary
-	for (int i = 0; i < tpf; i++, t++) {
-		for (int j = 0; j < numPixels(); j++) {
-			PixelTracker &pixel = pixels[j];
-			pixel.accumulated_light += frame(j);
-			if (pixel.accumulated_light >= pixel.target_light) {
-				firePixel(pixel);
-			}
+	// Loop through pixels and emit events
+	timestamp_t const frame_end_time = t + tpf;
+	for (int i = 0; i < numPixels(); i++) {
+		PixelTracker &pixel = pixels[i];
+		timestamp_t current_time = t;
+		timestamp_t next_fire_time = current_time + timestepsUntilNextFire(pixel, frame(i));
+		while (next_fire_time <= frame_end_time) {
+			pixel.accumulated_light += frame(i) * (next_fire_time - current_time);
+			firePixel(pixel, next_fire_time);
+			current_time = next_fire_time;
+			next_fire_time += timestepsUntilNextFire(pixel, frame(i));
 		}
+		pixel.accumulated_light += frame(i) * (frame_end_time - current_time);
 	}
+
+	// Move timestamp forward
+	t = frame_end_time;
 }
 
-void FramedCameraEmulator::firePixel(PixelTracker& pixel) {
-	timedelta_t dt = t - pixel.last_fire_time;
-	PixelFire pf(pixel.x, pixel.y, pixel.d, dt);
-	output.write(pf);
-	pixel.last_fire_time = t;
-	pixel.d = dControl.nextD(pixel.x, pixel.y, pixel.d, dt);
+timedelta_t FramedCameraEmulator::timestepsUntilNextFire(const PixelTracker& pixel, light_t light_accumulated_per_timestep) const {
+	light_t light_needed_to_fire = pixel.target_light - pixel.accumulated_light;
+	return ceil(light_needed_to_fire / light_accumulated_per_timestep);
+}
+
+void FramedCameraEmulator::firePixel(PixelTracker& pixel, timestamp_t fire_time) {
+	timedelta_t dt = fire_time - pixel.last_fire_time;
+	output.write(PixelFire(pixel.x, pixel.y, pixel.d, dt));
+	pixel.last_fire_time = fire_time;
 	pixel.accumulated_light -= pixel.target_light;
+	pixel.d = dControl.nextD(pixel.x, pixel.y, pixel.d, dt);
 	pixel.target_light = (0x1 << pixel.d);
 }

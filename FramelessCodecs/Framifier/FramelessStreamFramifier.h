@@ -3,7 +3,7 @@
 #include "Frame/GrayDoubleFrame.h"
 #include "CameraEmulator/DataTypes.h"
 #include "CameraEmulator/PixelFire.h"
-#include "PixelFireStreamSource.h"
+#include "OrderedPixelFireStreamSource.h"
 #include "GrayDoubleFrameStreamSink.h"
 
 #include <vector>
@@ -15,17 +15,12 @@ private:
 	/*
 	** Input source.
 	*/
-	PixelFireStreamSource input;
+	OrderedPixelFireStreamSource input;
 
 	/*
 	** Output sink.
 	*/
 	GrayDoubleFrameStreamSink output;
-
-	/*
-	** Buffers the next PixelFire object from the Source.
-	*/
-	PixelFire pixel;
 
 	/*
 	** Buffers frames of intensity data to send to the Sink object.
@@ -40,7 +35,7 @@ private:
 	/*
 	** The current time, stored as a number of ticks since the video started.
 	*/
-	long int t;
+	timestamp_t t;
 
 	/*
 	** Convenience methods to get the width, height, and number of pixels in the
@@ -51,14 +46,9 @@ private:
 	size_t numPixels() const;
 
 	/*
-	** Convenience method to get a pixel's index given its x and y coordinates.
-	*/
-	inline size_t index(const PixelFire&) const;
-
-	/*
 	** Given a pixel fire object, computes the corresponding intensity.
 	*/
-	inline double computeIntensity(const PixelFire&);
+	inline double computeIntensity(const Intensity&);
 
 
 public:

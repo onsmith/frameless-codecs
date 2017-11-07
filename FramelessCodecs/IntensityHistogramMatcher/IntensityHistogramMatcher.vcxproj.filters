@@ -15,21 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cicdf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="match-intensity-histogram.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="cicdf.h">
+    <ClInclude Include="Cicdf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CicdfRegion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="regions-of-interest.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <ClCompile Include="Cicdf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CicdfRegion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

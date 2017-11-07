@@ -118,7 +118,6 @@
     <ClInclude Include="cicdf.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="intensity-transform.txt" />
     <Text Include="regions-of-interest.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

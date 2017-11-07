@@ -1,5 +1,7 @@
 /**
- * Name: ComputeHistogram.cpp
+ * Solution: FramelessCodecs
+ * Project: ComputeHistogram
+ * File: Main.cpp
  * Purpose: Reads a binary data file and computes a histogram of values
  *   observed. Outputs the resulting histogram bin counts to the standard
  *   output stream.
@@ -51,8 +53,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Parse command line arguments
-	const char *program_filename = argv[0];
-	const char *input_filename   = argv[1];
+	const char* const program_filename = argv[0];
+	const char* const input_filename   = argv[1];
 
 	// Allocate histogram
 	const size_t histogram_size = 0x1 << (sizeof(data_value_t) * 8);
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
 
 	// Output results
 	for (int i = 0; i < histogram_size; i++) {
-		printf("%i\n", histogram[i]);
+		cout << histogram[i] << endl;
 	}
 
 	// All done

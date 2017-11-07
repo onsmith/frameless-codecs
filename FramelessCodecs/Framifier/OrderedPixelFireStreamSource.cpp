@@ -1,9 +1,5 @@
 #include "OrderedPixelFireStreamSource.h"
 
-#include <iostream>
-using std::cout;
-using std::endl;
-
 
 int OrderedPixelFireStreamSource::index(const PixelFire& pixel) const {
 	return stride * pixel.y + pixel.x;
@@ -30,11 +26,7 @@ void OrderedPixelFireStreamSource::fillBuffer(int i) {
 		PixelFire pixel;
 		read(pixel);
 		buffer[index(pixel)].emplace(pixel.d, pixel.dt);
-		//bufferSize++;
-		if (bufferSize < buffer[index(pixel)].size()) {
-			bufferSize = buffer[index(pixel)].size();
-			cout << bufferSize << ": " << index(pixel) << endl;
-		}
+		bufferSize++;
 	}
 }
 
@@ -44,7 +36,7 @@ Intensity& OrderedPixelFireStreamSource::next(int i) {
 
 void OrderedPixelFireStreamSource::pop(int i) {
 	buffer[i].pop();
-	//bufferSize--;
+	bufferSize--;
 }
 
 bool OrderedPixelFireStreamSource::empty(int i) const {

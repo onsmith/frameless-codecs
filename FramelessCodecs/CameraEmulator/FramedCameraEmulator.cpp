@@ -12,9 +12,9 @@ using std::cout;
 using std::endl;
 
 
-#define CONSTANT_D 8
-#define INITIAL_D  8
-#define TARGET_DT  8
+#define CONSTANT_D 5
+#define INITIAL_D  5
+//#define TARGET_DT  5
 
 
 FramedCameraEmulator::FramedCameraEmulator(istream& input, ostream& output, int width, int height, int fps) :

@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) {
 	// All done
 	cout << "Done! "
 		<< frame_count
-		<< " frames downsampled."
+		<< " frames transcoded."
 		<< endl;
 	getchar();
 	return 0;

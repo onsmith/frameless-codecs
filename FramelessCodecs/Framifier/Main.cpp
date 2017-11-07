@@ -1,5 +1,7 @@
 /**
- * Name: Framifier.cpp
+ * Solution: FramelessCodecs
+ * Project: Framifier
+ * File: Main.cpp
  * Purpose: TODO
  */
 
@@ -17,7 +19,7 @@ using std::ios;
 
 #include <cstdint>
 
-#include "FramelessStreamFramifier.h"
+#include "UnorderedFramifier.h"
 
 
 /*
@@ -85,7 +87,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Create emulator object
-	FramelessStreamFramifier framifier(
+	UnorderedFramifier framifier(
 		input_file,
 		output_file,
 		frame_width,

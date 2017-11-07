@@ -3,8 +3,14 @@
 #include <cstdint>
 
 /*
+** Represents the index of a pixel within a frame. Needs 23 bits to address
+**   pixels in a 4k frame.
+*/
+typedef uint32_t index_t;
+
+/*
 ** Represents an x or y coordinate of a pixel within a frame. Needs 12 bits per
-**   coordinate to store 4k addresses.
+**   coordinate to address pixels in a 4k frame.
 */
 typedef uint16_t coordinate_t;
 

@@ -5,10 +5,10 @@
 
 struct PixelFire {
 public:
-	coordinate_t x, y;
+	index_t i;
 	decimation_t d;
-	timedelta_t  dt;
+	timedelta_t dt;
 
 	PixelFire() = default;
-	PixelFire(coordinate_t x, coordinate_t y, decimation_t d, timedelta_t dt);
+	PixelFire(index_t, decimation_t, timedelta_t);
 };

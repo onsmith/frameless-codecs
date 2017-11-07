@@ -6,9 +6,9 @@
 struct PixelTracker {
 public:
 	/*
-	** The pixel's coordinates in the 2D frame.
+	** The pixel's index in the 2D frame.
 	*/
-	coordinate_t x, y;
+	index_t i;
 
 	/*
 	** The pixel's current decimation value.

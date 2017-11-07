@@ -2,7 +2,6 @@
 
 #include "Intensity.h"
 
-#include "CameraEmulator/Source.h"
 #include "CameraEmulator/DataTypes.h"
 #include "CameraEmulator/PixelFire.h"
 
@@ -16,10 +15,10 @@ using std::vector;
 using std::queue;
 
 
-class OrderedPixelFireStreamSource final : public Source<PixelFire> {
+class IntensityBuffer {
 private:
 	/*
-	** Delegates to stream object.
+	** Composed with a stream object.
 	*/
 	istream& stream;
 
@@ -29,57 +28,37 @@ private:
 	vector<queue<Intensity>> buffer;
 
 	/*
-	** Stride of the frame.
+	** Reads the next PixelFire object from the internal istream.
 	*/
-	const int stride;
-
-	/*
-	** Convenience method to get a PixelFire object's index.
-	*/
-	inline int index(const PixelFire&) const;
-
-	/*
-	** For diagnostic purposes, keeps track of the size of the buffer.
-	*/
-	unsigned long int bufferSize;
+	void read(PixelFire&);
 
 
 public:
 	/*
 	** Constructor.
 	*/
-	OrderedPixelFireStreamSource(istream&, int, int);
-
-	/*
-	** Reads the next PixelFire object from the internal istream.
-	*/
-	void read(PixelFire&) final;
+	IntensityBuffer(istream&, size_t);
 
 	/*
 	** Ensures that a PixelFire object exists for a given pixel index, consuming
 	**   and buffering as many PixelFire objects from the stream as necessary.
 	*/
-	void fillBuffer(int);
+	void fillBuffer(index_t);
 
 	/*
 	** Returns a reference to the next PixelFire object for a given pixel index,
 	**   if one exists.
 	*/
-	Intensity& next(int);
+	Intensity& next(index_t);
 
 	/*
 	** Removes the next PixelFire object for a given pixel index from the buffer,
 	**   if it exists.
 	*/
-	void pop(int);
+	void pop(index_t);
 
 	/*
 	** Checks if the buffer for a given pixel is empty.
 	*/
-	bool empty(int) const;
-
-	/*
-	** Gets the number of currently buffered intensity values.
-	*/
-	int size() const;
+	bool empty(index_t) const;
 };

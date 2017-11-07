@@ -15,12 +15,12 @@ public:
 	/*
 	** Gets a pixel's initial d value.
 	*/
-	decimation_t initD(int x, int y) final;
+	decimation_t initD(index_t) final;
 
 	/*
 	** Gets a pixel's next d value given the prior (d, dt) for that pixel.
 	*/
-	decimation_t nextD(int x, int y, decimation_t last_d, timedelta_t last_dt) final;
+	decimation_t nextD(index_t, decimation_t, timedelta_t) final;
 
 	/*
 	** Constructor.

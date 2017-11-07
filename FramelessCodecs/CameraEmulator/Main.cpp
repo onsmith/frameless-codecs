@@ -1,5 +1,7 @@
 /**
- * Name: CameraEmulator.cpp
+ * Solution: FramelessCodecs
+ * Project: CameraEmulator
+ * File: Main.cpp
  * Purpose: TODO
  */
 
@@ -17,7 +19,7 @@ using std::ios;
 
 #include <cstdint>
 
-#include "FramedCameraEmulator.h"
+#include "UnorderedCameraEmulator.h"
 
 
 /*
@@ -85,7 +87,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Create emulator object
-	FramedCameraEmulator emulator(
+	UnorderedCameraEmulator emulator(
 		input_file,
 		output_file,
 		frame_width,

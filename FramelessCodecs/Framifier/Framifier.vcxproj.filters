@@ -15,16 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Framifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FramelessStreamFramifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\CameraEmulator\PixelFire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GrayDoubleFrameStreamSink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Frame\Frame.cpp">
@@ -33,39 +24,36 @@
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OrderedPixelFireStreamSource.cpp">
+    <ClCompile Include="Intensity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Intensity.cpp">
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UnorderedFramifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntensityBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FramelessStreamFramifier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CameraEmulator\DataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CameraEmulator\PixelFire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CameraEmulator\Sink.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CameraEmulator\Source.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GrayDoubleFrameStreamSink.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Frame\GrayDoubleFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OrderedPixelFireStreamSource.h">
+    <ClInclude Include="Intensity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Intensity.h">
+    <ClInclude Include="UnorderedFramifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntensityBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

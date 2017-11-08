@@ -12,8 +12,8 @@ public:
 	/*
 	** Bounding box of this CicdfRegion within the larger Cicdf.
 	*/
-	const intensity_t  intensity_min,  intensity_max;  // x-axis bounds
-	const percentage_t percentage_min, percentage_max; // y-axis bounds
+	const intensity_t  intensityMin,  intensityMax;  // x-axis bounds
+	const percentage_t percentageMin, percentageMax; // y-axis bounds
 
 	/*
 	** Constructors.

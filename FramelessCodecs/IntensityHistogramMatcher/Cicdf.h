@@ -21,19 +21,21 @@ private:
 	*/
 	vector<CicdfRegion> regions;
 
+
+public:
 	/*
 	** Stores the overall intensity bounds.
 	*/
-	const intensity_t intensity_min;
-	const intensity_t intensity_max;
+	const intensity_t intensityMin;
+	const intensity_t intensityMax;
 
 	/*
-	** Sequentially adds a new region of interest to the Cicdf.
+	** Stores the overall percentage bounds.
 	*/
-	void addRegion(intensity_t, percentage_t);
+	const percentage_t percentageMin = 0.0;
+	const percentage_t percentageMax = 1.0;
 
 
-public:
 	/*
 	** Constructors.
 	*/
@@ -43,7 +45,7 @@ public:
 	/*
 	** Adds a new region of interest to the Cicdf.
 	*/
-	void addRegion(intensity_t, percentage_t, intensity_t, percentage_t);
+	void addRegion(intensity_t, intensity_t, percentage_t, percentage_t);
 
 	/*
 	** Given a percentage, calculates the corresponding intensity value.

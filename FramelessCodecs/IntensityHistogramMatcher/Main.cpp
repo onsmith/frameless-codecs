@@ -6,6 +6,8 @@
  */
 
 
+#include "Cicdf.h"
+
 #include <iostream>
 using std::cout;
 using std::cerr;
@@ -17,14 +19,14 @@ using std::ifstream;
 using std::ofstream;
 using std::ios;
 
+#include <vector>
+using std::vector;
+
 #include <cstdint>
 
 
 typedef uint16_t data_value_t;
 typedef uint32_t histogram_bin_t;
-
-
-#define PRINT_UPDATE_EVERY_X_VALUES 1000
 
 
 /*
@@ -33,7 +35,8 @@ typedef uint32_t histogram_bin_t;
 void print_usage(ostream& stream, char* program_filename) {
 	stream << "Usage: "
 	       << program_filename
-	       << " input-filename"
+	       << " histogram-filename"
+	       << " cicdf-filename"
 	       << endl;
 }
 
@@ -43,7 +46,7 @@ void print_usage(ostream& stream, char* program_filename) {
  */
 int main(int argc, char *argv[]) {
 	// Check number of passed command line arguments
-	if (argc != 2) {
+	if (argc != 3) {
 		cerr << "Incorrect number of arguments." << endl;
 		print_usage(cerr, argv[0]);
 		getchar();
@@ -51,38 +54,77 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Parse command line arguments
-	const char* const program_filename = argv[0];
-	const char* const input_filename   = argv[1];
+	const char* const program_filename   = argv[0];
+	const char* const histogram_filename = argv[1];
+	const char* const cicdf_filename     = argv[2];
 
-	// Allocate histogram
-	const size_t histogram_size = 0x1 << (sizeof(data_value_t) * 8);
-	histogram_bin_t histogram[histogram_size] = {0};
-
-	// Open input file
-	ifstream input_file;
-	input_file.open(input_filename, ios::in | ios::binary);
-	if (!input_file.is_open()) {
+	// Open histogram file
+	ifstream histogram_file;
+	histogram_file.open(histogram_filename, ios::in);
+	if (!histogram_file.is_open()) {
 		cerr << "Could not open file: "
-		     << input_filename
+		     << histogram_filename
 		     << endl;
 		getchar();
 		return 1;
 	}
 
-	// Traverse file and accumulate histogram
-	data_value_t buffer;
-	input_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer));
-	while (input_file.good()) {
-		histogram[buffer]++;
-		input_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer));
+	// Read histogram
+	const size_t histogram_size = 0x1 << (sizeof(data_value_t) * 8);
+	vector<histogram_bin_t> histogram(histogram_size);
+	for (int i = 0; i < histogram_size; i++) {
+		histogram_file >> histogram[i];
 	}
 
-	// Close file
-	input_file.close();
+	// Close histogram file
+	histogram_file.close();
 
-	// Output results
+	// Convert histogram to cdf
+	vector<double> cdf(histogram_size);
+	cdf[0] = histogram[0];
+	for (int i = 1; i < histogram_size; i++) {
+		cdf[i] = cdf[i-1] + histogram[i];
+	}
+	const histogram_bin_t largest_cdf_bin = cdf[histogram_size - 1];
 	for (int i = 0; i < histogram_size; i++) {
-		cout << histogram[i] << endl;
+		cdf[i] = cdf[i] / largest_cdf_bin;
+	}
+
+	// Open cicdf file
+	ifstream cicdf_file;
+	cicdf_file.open(cicdf_filename, ios::in);
+	if (!cicdf_file.is_open()) {
+		cerr << "Could not open file: "
+		     << cicdf_filename
+		     << endl;
+		getchar();
+		return 1;
+	}
+
+	// Read continuous intensity cdf
+	Cicdf cicdf;
+	Cicdf::intensity_t  low_i, high_i = cicdf.intensityMin;
+	Cicdf::percentage_t low_p, high_p = cicdf.percentageMin;
+	while (cicdf_file >> low_i) {
+		cicdf_file >> high_i >> low_p >> high_p;
+		cicdf.addRegion(low_i, high_i, low_p, high_p);
+	}
+	if (high_i < cicdf.intensityMax || high_p < cicdf.percentageMax) {
+		cicdf.addRegion(high_i, cicdf.intensityMax, high_p, cicdf.percentageMax);
+	}
+
+	// Close cicdf file
+	cicdf_file.close();
+
+	// Perform histogram matching
+	vector<Cicdf::intensity_t> intensity_map(histogram_size);
+	for (int i = 0; i < histogram_size; i++) {
+		intensity_map[i] = cicdf.intensityAt(cdf[i]);
+	}
+
+	// Output results 
+	for (int i = 0; i < histogram_size; i++) {
+		printf("%.70lf\n", intensity_map[i]);
 	}
 
 	// All done

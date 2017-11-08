@@ -62,24 +62,24 @@ CicdfRegion::CicdfRegion(
 	percentage_t percentage_min,
 	percentage_t percentage_max
 ) :
-	intensity_min(intensity_min),
-	intensity_max(intensity_max),
-	percentage_min(percentage_min),
-	percentage_max(percentage_max) {
+	intensityMin(intensity_min),
+	intensityMax(intensity_max),
+	percentageMin(percentage_min),
+	percentageMax(percentage_max) {
 }
 
 CicdfRegion::intensity_t CicdfRegion::intensityAt(percentage_t percentage) const {
-	const double b3 = a3(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b2 = a2(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b1 = a1(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b0 = a0(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	return find_cubic_zero(b3, b2, b1, b0 - percentage, intensity_min, intensity_max);
+	const double b3 = a3(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b2 = a2(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b1 = a1(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b0 = a0(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	return find_cubic_zero(b3, b2, b1, b0 - percentage, intensityMin, intensityMax);
 }
 
 CicdfRegion::percentage_t CicdfRegion::percentageAt(intensity_t intensity) const {
-	const double b3 = a3(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b2 = a2(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b1 = a1(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
-	const double b0 = a0(intensity_min, percentage_min, intensity_max, percentage_max, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b3 = a3(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b2 = a2(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b1 = a1(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
+	const double b0 = a0(intensityMin, percentageMin, intensityMax, percentageMax, DERIVATIVE_AT_LOWER_POINT, DERIVATIVE_AT_UPPER_POINT);
 	return evaluate_cubic(b3, b2, b1, b0, intensity);
 }

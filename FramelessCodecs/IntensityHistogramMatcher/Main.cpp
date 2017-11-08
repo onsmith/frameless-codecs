@@ -28,6 +28,9 @@ using std::vector;
 typedef uint16_t data_value_t;
 typedef uint32_t histogram_bin_t;
 
+typedef Cicdf::intensity_t  intensity_t;
+typedef Cicdf::percentage_t percentage_t;
+
 
 /*
 ** Prints the program usage to the given output stream.
@@ -103,8 +106,8 @@ int main(int argc, char *argv[]) {
 
 	// Read continuous intensity cdf
 	Cicdf cicdf;
-	Cicdf::intensity_t  low_i, high_i = cicdf.intensityMin;
-	Cicdf::percentage_t low_p, high_p = cicdf.percentageMin;
+	intensity_t  low_i, high_i = cicdf.intensityMin;
+	percentage_t low_p, high_p = cicdf.percentageMin;
 	while (cicdf_file >> low_i) {
 		cicdf_file >> high_i >> low_p >> high_p;
 		cicdf.addRegion(low_i, high_i, low_p, high_p);
@@ -117,7 +120,7 @@ int main(int argc, char *argv[]) {
 	cicdf_file.close();
 
 	// Perform histogram matching
-	vector<Cicdf::intensity_t> intensity_map(histogram_size);
+	vector<intensity_t> intensity_map(histogram_size);
 	for (int i = 0; i < histogram_size; i++) {
 		intensity_map[i] = cicdf.intensityAt(cdf[i]);
 	}

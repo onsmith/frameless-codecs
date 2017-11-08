@@ -3,6 +3,7 @@
 
 #define ZERO_TOLERANCE 0.000001F
 
+
 Cicdf::Cicdf() :
 	intensityMin(0.0),
 	intensityMax(1.0) {
@@ -24,8 +25,8 @@ void Cicdf::addRegion(
 		p_last = percentageMin;
 	} else {
 		CicdfRegion &region = regions.back();
-		i_last = region.intensityMax;
-		p_last = region.percentageMax;
+		i_last = region.intensityUpperBound();
+		p_last = region.percentageUpperBound();
 	}
 	if (i_last < i_min || p_last < p_min) {
 		regions.emplace_back(i_last, i_min, p_last, p_min);
@@ -35,7 +36,7 @@ void Cicdf::addRegion(
 
 Cicdf::intensity_t Cicdf::intensityAt(percentage_t percentage) const {
 	for (int i = 0; i < regions.size(); i++) {
-		if (regions[i].percentageMin <= percentage && percentage <= regions[i].percentageMax) {
+		if (regions[i].percentageLowerBound() <= percentage && percentage <= regions[i].percentageUpperBound()) {
 			return regions[i].intensityAt(percentage);
 		}
 	}
@@ -43,7 +44,7 @@ Cicdf::intensity_t Cicdf::intensityAt(percentage_t percentage) const {
 
 Cicdf::percentage_t Cicdf::percentageAt(intensity_t intensity) const {
 	for (int i = 0; i < regions.size(); i++) {
-		if (regions[i].intensityMin <= intensity && intensity <= regions[i].intensityMax) {
+		if (regions[i].intensityLowerBound() <= intensity && intensity <= regions[i].intensityUpperBound()) {
 			return regions[i].percentageAt(intensity);
 		}
 	}

@@ -113,11 +113,13 @@
   <ItemGroup>
     <ClInclude Include="Cicdf.h" />
     <ClInclude Include="CicdfRegion.h" />
+    <ClInclude Include="Spline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cicdf.cpp" />
     <ClCompile Include="CicdfRegion.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Spline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="RegionsOfInterest.txt" />

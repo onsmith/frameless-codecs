@@ -16,7 +16,7 @@ using std::ostream;
 #include "Frame/GrayDoubleFrame.h"
 
 
-#define CONSTANT_D 8
+#define CONSTANT_D 10
 //#define INITIAL_D  8
 //#define TARGET_DT  8
 
@@ -24,12 +24,12 @@ using std::ostream;
 class UnorderedCameraEmulator {
 private:
 	/*
-	** Ticks per second.
+	** Ticks per second (for emulation).
 	*/
 	static const long unsigned int tps = (0x1 << 14);
 
 	/*
-	** Frames per second.
+	** Frames per second (for source video).
 	*/
 	const long int fps;
 
@@ -39,12 +39,17 @@ private:
 	const long int tpf;
 
 	/*
-	** Input stream.
+	** Maximum allowed dt (in ticks) before pixels are prematurely fired.
+	*/
+	const long unsigned int dtMax = 0xFFFF;
+
+	/*
+	** Input stream (for reading intensity information as doubles).
 	*/
 	istream& input;
 
 	/*
-	** Output stream.
+	** Output stream (for writing pixel fire information).
 	*/
 	ostream& output;
 
@@ -86,8 +91,8 @@ private:
 	inline void writeText(const PixelFire&);
 
 	/*
-	** Fires a given pixel at a given time, creating a new PixelFire object and
-	**   writing it to the output stream.
+	** Fires a given pixel at a given time, creating a single new PixelFire
+	**   object and writing it to the output stream.
 	*/
 	inline void firePixel(PixelTracker&, timestamp_t);
 

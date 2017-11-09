@@ -47,7 +47,7 @@ inline void UnorderedCameraEmulator::writeBinary(const PixelFire &pixel) {
 	output.write(reinterpret_cast<const char*>(&dt     ), sizeof(dt));
 }
 
-inline void UnorderedCameraEmulator::writeText(const PixelFire &pixel) {
+void UnorderedCameraEmulator::writeText(const PixelFire &pixel) {
 	output
 		<< "("
 		<< static_cast<int>(pixel.i) << ", "
@@ -83,14 +83,25 @@ void UnorderedCameraEmulator::emulateFrame() {
 	for (int i = 0; i < numPixels(); i++) {
 		PixelTracker &pixel = pixels[i];
 		timestamp_t current_time = frame_begin_time;
-		timestamp_t next_fire_time = current_time + timestepsUntilNextFire(pixel, frame(i));
-		while (next_fire_time <= frame_end_time) {
-			pixel.accumulated_light += frame(i) * (next_fire_time - current_time);
-			firePixel(pixel, next_fire_time);
-			current_time = next_fire_time;
-			next_fire_time += timestepsUntilNextFire(pixel, frame(i));
+		while (true) {
+			const timestamp_t early_fire_time = pixel.last_fire_time + dtMax;
+			const timestamp_t next_fire_time  = current_time + timestepsUntilNextFire(pixel, frame(i));
+			// Case 1: Pixel fires normally before frame ends
+			if (next_fire_time <= frame_end_time && next_fire_time <= early_fire_time) {
+				pixel.accumulated_light += frame(i) * (next_fire_time - current_time);
+				current_time = next_fire_time;
+				firePixel(pixel, current_time);
+			// Case 2: Pixel fires prematurely before frame ends
+			} else if (early_fire_time <= frame_end_time && early_fire_time < next_fire_time) {
+				pixel.accumulated_light = pixel.target_light;
+				current_time = early_fire_time;
+				firePixel(pixel, current_time);
+			// Case 3: Pixel does not fire before frame ends
+			} else {
+				pixel.accumulated_light += frame(i) * (frame_end_time - current_time);
+				break;
+			}
 		}
-		pixel.accumulated_light += frame(i) * (frame_end_time - current_time);
 	}
 
 	// Move to next frame
@@ -103,15 +114,20 @@ timedelta_t UnorderedCameraEmulator::timestepsUntilNextFire(const PixelTracker& 
 }
 
 void UnorderedCameraEmulator::firePixel(PixelTracker& pixel, timestamp_t fire_time) {
-	timedelta_t dt = fire_time - pixel.last_fire_time;
-	writeBinary(PixelFire(pixel.i, pixel.d, dt));
-	pixel.last_fire_time = fire_time;
-	pixel.accumulated_light -= pixel.target_light;
-	pixel.d = dControl.nextD(pixel.i, pixel.d, dt);
-	pixel.target_light = (0x1 << pixel.d);
+	while (pixel.accumulated_light >= pixel.target_light) {
+		timedelta_t dt = fire_time - pixel.last_fire_time;
+		if (dt > 0) {
+			writeBinary(PixelFire(pixel.i, pixel.d, dt));
+			// writeText(PixelFire(pixel.i, pixel.d, dt)); // DEBUG
+		}
+		pixel.last_fire_time = fire_time;
+		pixel.accumulated_light -= pixel.target_light;
+		pixel.d = dControl.nextD(pixel.i, pixel.d, dt);
+		pixel.target_light = (0x1 << pixel.d);
+	}
 }
 
-inline double UnorderedCameraEmulator::scaleIntensity(double intensity) const {
+double UnorderedCameraEmulator::scaleIntensity(double intensity) const {
 	intensity *= INTENSITY_RANGE;
 	intensity += INTENSITY_MIN;
 	intensity /= tps;

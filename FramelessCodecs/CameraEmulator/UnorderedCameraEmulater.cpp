@@ -20,7 +20,17 @@ UnorderedCameraEmulator::UnorderedCameraEmulator(
 ) :
 	source(input, width, height, fps, TICKS_PER_FRAME),
 	output(output),
-	pixels(width*height) {
+	pixels(width*height),
+	//dControl(8)
+	//dControl(8, 32)
+	dControl(
+		6, 16,   // Initial d and target dt value for ROI
+		10, 140, // Initial d and target dt value for background
+		width,   // Width of video
+		200, 15, // (x, y) coordinates of min point of ROI bounding box
+		420, 355 // (x, y) coordinates of max point of ROI bounding box
+	)
+{
 	initializePixelTrackers();
 }
 

@@ -14,11 +14,7 @@ using std::ostream;
 #include "VideoLightSource.h"
 #include "ConstDController.h"
 #include "TargetDController.h"
-
-
-#define CONSTANT_D 6
-//#define INITIAL_D  8
-//#define TARGET_DT  8
+#include "RoiDController.h"
 
 
 class UnorderedCameraEmulator {
@@ -50,8 +46,9 @@ private:
 	/*
 	** Decimation controller.
 	*/
-	ConstDController dControl = ConstDController(CONSTANT_D);
-	//TargetDController dControl = TargetDController(INITIAL_D, TARGET_DT);
+	RoiDController dControl;
+	//TargetDController dControl;
+	//ConstDController dControl;
 
 	/*
 	** Vector of PixelTracker objects, which track information for each pixel.

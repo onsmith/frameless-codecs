@@ -24,6 +24,7 @@
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DController.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="RoiDController.h" />
     <ClInclude Include="UnorderedCameraEmulator.h" />
     <ClInclude Include="PixelFire.h" />
     <ClInclude Include="PixelTracker.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="ConstDController.cpp" />
     <ClCompile Include="PixelFire.cpp" />
     <ClCompile Include="PixelTracker.cpp" />
+    <ClCompile Include="RoiDController.cpp" />
     <ClCompile Include="UnorderedCameraEmulater.cpp" />
     <ClCompile Include="TargetDController.cpp" />
     <ClCompile Include="VideoLightSource.cpp" />

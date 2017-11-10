@@ -30,12 +30,6 @@
     <ClInclude Include="PixelTracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sink.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PixelFire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,6 +37,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UnorderedCameraEmulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoLightSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,9 +56,6 @@
     <ClCompile Include="TargetDController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PixelFire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Frame\Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,6 +63,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UnorderedCameraEmulater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoLightSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LightSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelFire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

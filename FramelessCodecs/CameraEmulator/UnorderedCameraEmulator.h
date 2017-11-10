@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <vector>
 using std::vector;
 
@@ -7,46 +9,38 @@ using std::vector;
 using std::istream;
 using std::ostream;
 
-#include "DataTypes.h"
 #include "PixelFire.h"
 #include "PixelTracker.h"
+#include "VideoLightSource.h"
 #include "ConstDController.h"
 #include "TargetDController.h"
 
-#include "Frame/GrayDoubleFrame.h"
 
-
-#define CONSTANT_D 10
+#define CONSTANT_D 6
 //#define INITIAL_D  8
 //#define TARGET_DT  8
 
 
 class UnorderedCameraEmulator {
+public:
+	/*
+	** Data types.
+	*/
+	typedef uint64_t time_t;
+	typedef uint64_t pixel_t;
+	typedef double   light_t;
+
+
 private:
-	/*
-	** Ticks per second (for emulation).
-	*/
-	static const long unsigned int tps = (0x1 << 14);
-
-	/*
-	** Frames per second (for source video).
-	*/
-	const long int fps;
-
-	/*
-	** Ticks per frame.
-	*/
-	const long int tpf;
-
 	/*
 	** Maximum allowed dt (in ticks) before pixels are prematurely fired.
 	*/
-	const long unsigned int dtMax = 0xFFFF;
+	const long unsigned int DT_MAX = 0xFF;
 
 	/*
-	** Input stream (for reading intensity information as doubles).
+	** LightSource object providing the scene light intensity information.
 	*/
-	istream& input;
+	VideoLightSource source;
 
 	/*
 	** Output stream (for writing pixel fire information).
@@ -65,14 +59,9 @@ private:
 	vector<PixelTracker> pixels;
 
 	/*
-	** The current frame number.
+	** Current frame number.
 	*/
-	unsigned long int frameNumber = 0;
-
-	/*
-	** Buffers frames of intensity data from the input stream.
-	*/
-	GrayDoubleFrame frame;
+	time_t currentFrame = 0;
 
 	/*
 	** Internal method to initialize a PixelTracker object for every pixel.
@@ -94,19 +83,7 @@ private:
 	** Fires a given pixel at a given time, creating a single new PixelFire
 	**   object and writing it to the output stream.
 	*/
-	inline void firePixel(PixelTracker&, timestamp_t);
-
-	/*
-	** Scales a raw intensity value read from the input stream.
-	*/
-	inline double scaleIntensity(double) const;
-
-	/*
-	** Given a PixelTracker and the amount of light to accumulate during a single
-	**   tick, calculates and returns the number of ticks that will pass before
-	**   the pixel emits a PixelFire object.
-	*/
-	inline timedelta_t timestepsUntilNextFire(const PixelTracker&, light_t) const;
+	inline void firePixel(PixelTracker&, time_t);
 	
 	/*
 	** Convenience method to retrieve the width of the frame.
@@ -132,13 +109,14 @@ public:
 	UnorderedCameraEmulator(
 		istream& input,
 		ostream& output,
-		int width,
-		int height,
-		int fps
+		pixel_t width,
+		pixel_t height,
+		time_t fps
 	);
 
 	/*
-	** Pulls a frame from the Source, emulates it, and emits PixelFire objects.
+	** Emulates the next frame of light scene information, emitting PixelFire
+	**   objects to the output stream as necessary.
 	*/
 	void emulateFrame();
 };

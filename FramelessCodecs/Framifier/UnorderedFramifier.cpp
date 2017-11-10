@@ -44,8 +44,10 @@ void UnorderedFramifier::framifyPixelFires() {
 }
 
 double UnorderedFramifier::computeIntensity(const Intensity &pixel) const {
-	// TODO: Scale according to tps and/or desired window
-	return static_cast<double>(0x1 << pixel.d) / static_cast<double>(pixel.dt);
+	double intensity = (static_cast<double>(0x1 << pixel.d) / pixel.dt) * tps;
+	intensity -= 1;
+	intensity /= 16384;
+	return intensity;
 }
 
 size_t UnorderedFramifier::width() const {

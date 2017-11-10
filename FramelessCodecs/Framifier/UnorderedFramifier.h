@@ -14,22 +14,25 @@ using std::vector;
 using std::ostream;
 
 
+#define TICKS_PER_SECOND 1000
+
+
 class UnorderedFramifier {
 private:
 	/*
 	** Ticks per second.
 	*/
-	static const long unsigned int tps = (0x1 << 14);
-
-	/*
-	** Frames per second.
-	*/
-	const long unsigned int fps;
+	static const long unsigned int tps = TICKS_PER_SECOND;
 
 	/*
 	** Ticks per frame.
 	*/
 	const long unsigned int tpf;
+
+	/*
+	** Frames per second.
+	*/
+	const long unsigned int fps;
 
 	/*
 	** Input stream is maanged by an IntensityBuffer.

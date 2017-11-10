@@ -27,11 +27,6 @@ private:
 	*/
 	vector<queue<Intensity>> buffer;
 
-	/*
-	** Reads the next PixelFire object from the internal istream.
-	*/
-	void read(PixelFire&);
-
 
 public:
 	/*

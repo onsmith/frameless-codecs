@@ -23,21 +23,24 @@
     <ClInclude Include="ConstDController.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="DController.h" />
+    <ClInclude Include="LightSource.h" />
     <ClInclude Include="UnorderedCameraEmulator.h" />
     <ClInclude Include="PixelFire.h" />
     <ClInclude Include="PixelTracker.h" />
-    <ClInclude Include="Sink.h" />
-    <ClInclude Include="Source.h" />
     <ClInclude Include="TargetDController.h" />
+    <ClInclude Include="VideoLightSource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Frame\Frame.cpp" />
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
+    <ClCompile Include="LightSource.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ConstDController.cpp" />
-    <ClCompile Include="UnorderedCameraEmulater.cpp" />
     <ClCompile Include="PixelFire.cpp" />
+    <ClCompile Include="PixelTracker.cpp" />
+    <ClCompile Include="UnorderedCameraEmulater.cpp" />
     <ClCompile Include="TargetDController.cpp" />
+    <ClCompile Include="VideoLightSource.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -98,6 +101,9 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <ShowProgress>NotSet</ShowProgress>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -23,6 +23,9 @@ using std::vector;
 #include <cstdint>
 
 
+#define BUFFER_SIZE 640*360
+
+
 typedef uint16_t input_value_t;
 typedef double   output_value_t;
 
@@ -104,11 +107,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Loop through frames and apply mapping
-	input_value_t buffer;
-	input_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer));
+	vector<input_value_t>   input_buffer(BUFFER_SIZE);
+	vector<output_value_t> output_buffer(BUFFER_SIZE);
 	while (input_file.good() && output_file.good()) {
-		output_file.write(reinterpret_cast<char*>(&map[buffer]), sizeof(map[buffer]));
-		input_file.read(reinterpret_cast<char*>(&buffer), sizeof(buffer));
+		input_file.read(reinterpret_cast<char*>(input_buffer.data()), input_buffer.size()*sizeof(input_value_t));
+		int n = input_file.gcount() / sizeof(input_value_t);
+		for (int i = 0; i < n; i++) {
+			output_buffer[i] = map[input_buffer[i]];
+		}
+		output_file.write(reinterpret_cast<char*>(output_buffer.data()), n*sizeof(output_value_t));
 	}
 
 	// Close files

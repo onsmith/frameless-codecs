@@ -22,8 +22,8 @@ void VideoLightSource::nextFrame() {
 }
 
 LightSource::light_t VideoLightSource::scaleIntensity(light_t intensity) {
-	intensity *= 16384;
-	intensity += 1;
+	intensity *= 50000;
+	//intensity += 1;
 	return intensity;
 }
 

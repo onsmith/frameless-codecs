@@ -50,9 +50,9 @@ private:
 	GrayDoubleFrame frame;
 
 	/*
-	** Stores the last time each pixel fired.
+	** Stores the next time each pixel will fire.
 	*/
-	vector<timestamp_t> lastFireTimes;
+	vector<timestamp_t> nextFireTime;
 
 	/*
 	** The current frame number.
@@ -63,6 +63,11 @@ private:
 	** Given a pixel fire object, computes the corresponding intensity.
 	*/
 	inline double computeIntensity(const Intensity&) const;
+
+	/*
+	** Calculates the next fire time for each pixel and initializes the buffer.
+	*/
+	inline void initializeBuffer();
 
 
 public:

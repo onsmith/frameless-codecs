@@ -21,17 +21,18 @@ UnorderedCameraEmulator::UnorderedCameraEmulator(
 	source(input, width, height, fps, TICKS_PER_FRAME),
 	output(output),
 	pixels(width*height),
-	//dControl(8)
-	//dControl(8, 32)
+	//dControl(10)
+	//dControl(10, 38)
 	dControl(
-		6, 16,   // Initial d and target dt value for ROI
-		10, 140, // Initial d and target dt value for background
+		6,  16,  // Initial d and target dt value for ROI
+		12, 160, // Initial d and target dt value for background
 		width,   // Width of video
-		200, 15, // (x, y) coordinates of min point of ROI bounding box
-		420, 355 // (x, y) coordinates of max point of ROI bounding box
+		200, 30, // (x, y) coordinates of min point of ROI bounding box
+		440, 355 // (x, y) coordinates of max point of ROI bounding box
 	)
 {
 	initializePixelTrackers();
+	source.nextFrame();
 }
 
 void UnorderedCameraEmulator::initializePixelTrackers() {
@@ -63,13 +64,9 @@ size_t UnorderedCameraEmulator::numPixels() const {
 }
 
 void UnorderedCameraEmulator::emulateFrame() {
-	// Load next frame from LightSource.
-	source.nextFrame();
-	currentFrame++;
-
 	// Loop through pixels and emit events
-	const time_t time_frame_begins = source.ticksPerFrame() * (currentFrame - 1);
-	const time_t time_frame_ends   = source.ticksPerFrame() *  currentFrame;
+	const time_t time_frame_begins = source.ticksPerFrame() *  currentFrame;
+	const time_t time_frame_ends   = source.ticksPerFrame() * (currentFrame + 1);
 	for (int i = 0; i < numPixels(); i++) {
 		PixelTracker &pixel = pixels[i];
 		time_t current_time = time_frame_begins;
@@ -96,6 +93,10 @@ void UnorderedCameraEmulator::emulateFrame() {
 			}
 		}
 	}
+	
+	// Move to next frame.
+	source.nextFrame();
+	currentFrame++;
 }
 
 void UnorderedCameraEmulator::firePixel(PixelTracker& pixel, time_t fire_time) {

@@ -14,27 +14,36 @@ UnorderedFramifier::UnorderedFramifier(
 ) :
 	input(input, width * height),
 	output(output),
-	lastFireTimes(width * height, 0),
+	nextFireTime(width * height, 0),
 	frame(width, height),
 	fps(fps),
-	tpf(tps / fps) {
+	tpf(tps / fps)
+{
+	initializeBuffer();
 }
+
+void UnorderedFramifier::initializeBuffer() {
+	for (int i = 0; i < numPixels(); i++) {
+		input.fillBuffer(i);
+		if (!input.empty(i)) {
+			nextFireTime[i] = input.next(i).dt;
+		}
+	}
+};
 
 void UnorderedFramifier::framifyPixelFires() {
 	// Update every pixel in the frame
 	timestamp_t const frame_begin_time = tpf*frameNumber;
 	timestamp_t const frame_end_time   = tpf*(frameNumber + 1);
 	for (int i = 0; i < numPixels(); i++) {
-		while (lastFireTimes[i] < frame_end_time) {
-			input.fillBuffer(i);
-			if (input.empty(i)) {
-				cerr << "Warning! No more intensity data for pixel " << i << "." << endl;
-				break;
-			}
+		while (!input.empty(i) && nextFireTime[i] <= frame_end_time) {
 			Intensity &pixel = input.next(i);
 			frame(i) = computeIntensity(pixel);
-			lastFireTimes[i] += pixel.dt;
 			input.pop(i);
+			input.fillBuffer(i);
+			if (!input.empty(i)) {
+				nextFireTime[i] += input.next(i).dt;
+			}
 		}
 	}
 
@@ -45,8 +54,8 @@ void UnorderedFramifier::framifyPixelFires() {
 
 double UnorderedFramifier::computeIntensity(const Intensity &pixel) const {
 	double intensity = (static_cast<double>(0x1 << pixel.d) / pixel.dt) * tps;
-	intensity -= 1;
-	intensity /= 16384;
+	//intensity -= 1;
+	intensity /= 50000;
 	return intensity;
 }
 
@@ -59,5 +68,5 @@ size_t UnorderedFramifier::height() const {
 }
 
 size_t UnorderedFramifier::numPixels() const {
-	return lastFireTimes.size();
+	return nextFireTime.size();
 }

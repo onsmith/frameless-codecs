@@ -37,7 +37,7 @@ void UnorderedFramifier::framifyPixelFires() {
 	timestamp_t const frame_end_time   = tpf*(frameNumber + 1);
 	for (int i = 0; i < numPixels(); i++) {
 		while (!input.empty(i) && nextFireTime[i] <= frame_end_time) {
-			Intensity &pixel = input.next(i);
+			FramelessIntensity &pixel = input.next(i);
 			frame(i) = computeIntensity(pixel);
 			input.pop(i);
 			input.fillBuffer(i);
@@ -52,7 +52,7 @@ void UnorderedFramifier::framifyPixelFires() {
 	frameNumber++;
 }
 
-double UnorderedFramifier::computeIntensity(const Intensity &pixel) const {
+double UnorderedFramifier::computeIntensity(const FramelessIntensity &pixel) const {
 	double intensity = (static_cast<double>(0x1 << pixel.d) / pixel.dt) * tps;
 	//intensity -= 1;
 	intensity /= 50000;

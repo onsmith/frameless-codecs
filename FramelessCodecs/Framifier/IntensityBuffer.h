@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Intensity.h"
+#include "FramelessIntensity.h"
 
 #include "CameraEmulator/DataTypes.h"
 #include "CameraEmulator/PixelFire.h"
@@ -25,7 +25,7 @@ private:
 	/*
 	** Buffers PixelFire objects from the istream.
 	*/
-	vector<queue<Intensity>> buffer;
+	vector<queue<FramelessIntensity>> buffer;
 
 
 public:
@@ -44,7 +44,7 @@ public:
 	** Returns a reference to the next PixelFire object for a given pixel index,
 	**   if one exists.
 	*/
-	Intensity& next(index_t);
+	FramelessIntensity& next(index_t);
 
 	/*
 	** Removes the next PixelFire object for a given pixel index from the buffer,

@@ -1,4 +1,4 @@
-#include "UnorderedCameraEmulator.h"
+#include "OrderedCameraEmulator.h"
 
 #include "PixelFire.h"
 #include "PixelTracker.h"
@@ -11,7 +11,7 @@ using std::endl;
 #define TICKS_PER_FRAME 40
 
 
-UnorderedCameraEmulator::UnorderedCameraEmulator(
+OrderedCameraEmulator::OrderedCameraEmulator(
 	istream& input,
 	ostream& output,
 	pixel_t width,
@@ -21,6 +21,7 @@ UnorderedCameraEmulator::UnorderedCameraEmulator(
 	source(input, width, height, fps, TICKS_PER_FRAME),
 	output(output),
 	pixels(width*height),
+	buffer(TICKS_PER_FRAME),
 	dControl(10)
 	//dControl(10, 38)
 	//dControl(
@@ -35,7 +36,7 @@ UnorderedCameraEmulator::UnorderedCameraEmulator(
 	source.nextFrame();
 }
 
-void UnorderedCameraEmulator::initializePixelTrackers() {
+void OrderedCameraEmulator::initializePixelTrackers() {
 	for (int i = 0; i < numPixels(); i++) {
 		PixelTracker &pixel = pixels[i];
 		pixel.i = i;
@@ -43,27 +44,27 @@ void UnorderedCameraEmulator::initializePixelTrackers() {
 	}
 }
 
-inline void UnorderedCameraEmulator::writeBinary(const PixelFire &pixel) {
+void OrderedCameraEmulator::writeBinary(const PixelFire &pixel) {
 	pixel.writeBinaryTo(output);
 }
 
-void UnorderedCameraEmulator::writeText(const PixelFire &pixel) {
+void OrderedCameraEmulator::writeText(const PixelFire &pixel) {
 	pixel.writeTextTo(output);
 }
 
-int UnorderedCameraEmulator::width() const {
+int OrderedCameraEmulator::width() const {
 	return source.width();
 }
 
-int UnorderedCameraEmulator::height() const {
+int OrderedCameraEmulator::height() const {
 	return source.height();
 }
 
-size_t UnorderedCameraEmulator::numPixels() const {
+size_t OrderedCameraEmulator::numPixels() const {
 	return pixels.size();
 }
 
-void UnorderedCameraEmulator::emulateFrame() {
+void OrderedCameraEmulator::emulateFrame() {
 	// Loop through pixels and emit events
 	const time_t time_frame_begins = source.ticksPerFrame() *  currentFrame;
 	const time_t time_frame_ends   = source.ticksPerFrame() * (currentFrame + 1);
@@ -93,20 +94,32 @@ void UnorderedCameraEmulator::emulateFrame() {
 			}
 		}
 	}
+
+	// Write pixels fired this frame to the output stream
+	flushBuffer();
 	
 	// Move to next frame.
 	source.nextFrame();
 	currentFrame++;
 }
 
-void UnorderedCameraEmulator::firePixel(PixelTracker& pixel, time_t fire_time) {
+void OrderedCameraEmulator::firePixel(PixelTracker& pixel, time_t fire_time) {
 	while (pixel.readyToFire()) {
 		time_t dt = fire_time - pixel.last_fire_time;
 		if (dt > 0) {
-			writeBinary(PixelFire(pixel.i, pixel.d, dt));
-			//writeText(PixelFire(pixel.i, pixel.d, dt)); // DEBUG
+			buffer[(fire_time - 1) % TICKS_PER_FRAME].emplace_back(pixel.i, pixel.d, dt);
 		}
 		pixel.fire(fire_time);
 		pixel.updateDecimation(dControl.nextD(pixel.i, pixel.d, dt));
+	}
+}
+
+void OrderedCameraEmulator::flushBuffer() {
+	for (int i = 0; i < buffer.size(); i++) {
+		for (int j = 0; j < buffer[i].size(); j++) {
+			writeBinary(buffer[i][j]);
+			//writeText(buffer[i][j]);
+		}
+		buffer[i].clear();
 	}
 }

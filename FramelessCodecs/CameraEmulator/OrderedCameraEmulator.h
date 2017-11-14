@@ -17,7 +17,7 @@ using std::ostream;
 #include "RoiDController.h"
 
 
-class UnorderedCameraEmulator {
+class OrderedCameraEmulator {
 public:
 	/*
 	** Data types.
@@ -51,9 +51,15 @@ private:
 	//RoiDController dControl;
 
 	/*
-	** Vector of PixelTracker objects, which track information for each pixel.
+	** Vector of PixelTracker objects to track information for each pixel.
 	*/
 	vector<PixelTracker> pixels;
+
+	/*
+	** Buffers outgoing PixelFire objects so they can be emitted in order after
+	**   simulating each frame.
+	*/
+	vector<vector<PixelFire>> buffer;
 
 	/*
 	** Current frame number.
@@ -78,32 +84,21 @@ private:
 
 	/*
 	** Fires a given pixel at a given time, creating a single new PixelFire
-	**   object and writing it to the output stream.
+	**   object and adding it to the output buffer.
 	*/
 	inline void firePixel(PixelTracker&, time_t);
-	
+
 	/*
-	** Convenience method to retrieve the width of the frame.
+	** Flushes the output buffer, writing all its contents to the output stream.
 	*/
-	inline int width() const;
-	
-	/*
-	** Convenience method to retrieve the height of the frame.
-	**   scene.
-	*/
-	inline int height() const;
-	
-	/*
-	** Convenience method to retrieve the number of pixels in the scene.
-	*/
-	inline size_t numPixels() const;
+	inline void flushBuffer();
 
 
 public:
 	/*
 	** Constructor.
 	*/
-	UnorderedCameraEmulator(
+	OrderedCameraEmulator(
 		istream& input,
 		ostream& output,
 		pixel_t width,
@@ -116,4 +111,20 @@ public:
 	**   objects to the output stream as necessary.
 	*/
 	void emulateFrame();
+	
+	/*
+	** Convenience method to retrieve the width of the frame.
+	*/
+	int width() const;
+	
+	/*
+	** Convenience method to retrieve the height of the frame.
+	**   scene.
+	*/
+	int height() const;
+	
+	/*
+	** Convenience method to retrieve the number of pixels in the scene.
+	*/
+	size_t numPixels() const;
 };

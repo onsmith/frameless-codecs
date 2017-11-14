@@ -115,7 +115,8 @@
     <ClCompile Include="..\CameraEmulator\PixelFire.cpp" />
     <ClCompile Include="..\Frame\Frame.cpp" />
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp" />
-    <ClCompile Include="Intensity.cpp" />
+    <ClCompile Include="FramelessIntensity.cpp" />
+    <ClCompile Include="OrderedFramifier.cpp" />
     <ClCompile Include="UnorderedFramifier.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="IntensityBuffer.cpp" />
@@ -124,8 +125,9 @@
     <ClInclude Include="..\CameraEmulator\DataTypes.h" />
     <ClInclude Include="..\CameraEmulator\PixelFire.h" />
     <ClInclude Include="..\Frame\GrayDoubleFrame.h" />
+    <ClInclude Include="OrderedFramifier.h" />
     <ClInclude Include="UnorderedFramifier.h" />
-    <ClInclude Include="Intensity.h" />
+    <ClInclude Include="FramelessIntensity.h" />
     <ClInclude Include="IntensityBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -24,9 +24,6 @@
     <ClCompile Include="..\Frame\GrayDoubleFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Intensity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,6 +31,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntensityBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrderedFramifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FramelessIntensity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,13 +50,16 @@
     <ClInclude Include="..\Frame\GrayDoubleFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Intensity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UnorderedFramifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IntensityBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrderedFramifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FramelessIntensity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

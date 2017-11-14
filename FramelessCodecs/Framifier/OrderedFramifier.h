@@ -1,43 +1,49 @@
 #pragma once
 
-#include "IntensityBuffer.h"
-
-#include "Frame/GrayDoubleFrame.h"
-
-#include "CameraEmulator/DataTypes.h"
-#include "CameraEmulator/PixelFire.h"
+#include <cstdint>
 
 #include <vector>
 using std::vector;
 
 #include <iostream>
+using std::istream;
 using std::ostream;
+
+#include "Frame/GrayDoubleFrame.h"
+#include "CameraEmulator/PixelFire.h"
 
 
 #define TICKS_PER_SECOND 1000
 
 
-class UnorderedFramifier {
+class OrderedFramifier {
+public:
+	/*
+	** Data types.
+	*/
+	typedef uint64_t time_t;
+
+
 private:
 	/*
 	** Ticks per second.
 	*/
-	static const long unsigned int tps = TICKS_PER_SECOND;
+	time_t tps = TICKS_PER_SECOND;
 
 	/*
 	** Ticks per frame.
 	*/
-	const long unsigned int tpf;
+	time_t tpf;
 
 	/*
 	** Frames per second.
 	*/
-	const long unsigned int fps;
+	time_t fps;
 
 	/*
-	** Input stream is maanged by an IntensityBuffer.
+	** Input stream.
 	*/
-	IntensityBuffer input;
+	istream& input;
 
 	/*
 	** Output stream.
@@ -45,36 +51,31 @@ private:
 	ostream& output;
 
 	/*
+	** Buffers the next PixelFire object from the input stream.
+	*/
+	PixelFire pixel;
+
+	/*
 	** Buffers frames of intensity data to write to the output stream.
 	*/
 	GrayDoubleFrame frame;
 
 	/*
-	** Stores the next time each pixel will fire.
+	** Stores the next time each pixel will change.
 	*/
-	vector<timestamp_t> nextFireTime;
+	vector<time_t> nextChangeTime;
 
 	/*
 	** The current frame number.
 	*/
 	unsigned long int frameNumber = 0;
 
-	/*
-	** Given a pixel fire object, computes the corresponding intensity.
-	*/
-	inline double computeIntensity(const FramelessIntensity&) const;
-
-	/*
-	** Calculates the next fire time for each pixel and initializes the buffer.
-	*/
-	inline void initializeBuffer();
-
 
 public:
 	/*
 	** Constructor.
 	*/
-	UnorderedFramifier(
+	OrderedFramifier(
 		istream& input,
 		ostream& output,
 		size_t width,

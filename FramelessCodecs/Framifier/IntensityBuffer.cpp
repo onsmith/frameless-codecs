@@ -14,7 +14,7 @@ void IntensityBuffer::fillBuffer(index_t i) {
 	}
 }
 
-Intensity& IntensityBuffer::next(index_t i) {
+FramelessIntensity& IntensityBuffer::next(index_t i) {
 	return buffer[i].front();
 }
 

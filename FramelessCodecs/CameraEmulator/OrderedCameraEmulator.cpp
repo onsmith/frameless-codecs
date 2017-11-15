@@ -95,10 +95,8 @@ void OrderedCameraEmulator::emulateFrame() {
 		}
 	}
 
-	// Write pixels fired this frame to the output stream
+	// Write pixels that fired to the output stream and move to the next frame
 	flushBuffer();
-	
-	// Move to next frame.
 	source.nextFrame();
 	currentFrame++;
 }

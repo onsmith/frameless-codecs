@@ -27,7 +27,7 @@ void OrderedFramifier::framifyPixelFires() {
 	time_t const frame_end_time = tpf*(++frameNumber);
 
 	// Read values from the input stream until the current frame is over
-	while (input.good() && nextChangeTime[pixel.i] <= frame_end_time) {
+	while (input.good() && nextChangeTime[pixel.i] + pixel.dt <= frame_end_time) {
 		frame(pixel.i) = FramelessIntensity::toDouble(pixel.d, pixel.dt, tps);
 		nextChangeTime[pixel.i] += pixel.dt;
 		pixel.readFrom(input);

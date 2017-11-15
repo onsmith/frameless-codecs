@@ -19,7 +19,7 @@ using std::ios;
 
 #include <cstdint>
 
-#include "UnorderedCameraEmulator.h"
+#include "OrderedCameraEmulator.h"
 
 
 /*
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Create emulator object
-	UnorderedCameraEmulator emulator(
+	OrderedCameraEmulator emulator(
 		input_file,
 		output_file,
 		frame_width,

@@ -4,7 +4,11 @@
 using std::istream;
 using std::ostream;
 
+#include <cstdio>
+using std::size_t;
+
 #include <cstdint>
+
 
 
 /**

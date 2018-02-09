@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2008
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Downsampler", "Downsampler\Downsampler.vcxproj", "{821C56FE-5C18-4F50-BF60-F9FB444611A8}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntensityHistogramMatcher", "IntensityHistogramMatcher\IntensityHistogramMatcher.vcxproj", "{83F5F14C-6A1D-4CEB-B75E-B00710D11102}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntensityTransformer", "IntensityTransformer\IntensityTransformer.vcxproj", "{3971A3A7-B270-4265-ACFC-7765303BF330}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntensityCombiner", "IntensityCombiner\IntensityCombiner.vcxproj", "{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,14 @@ Global
 		{3971A3A7-B270-4265-ACFC-7765303BF330}.Release|x64.Build.0 = Release|x64
 		{3971A3A7-B270-4265-ACFC-7765303BF330}.Release|x86.ActiveCfg = Release|Win32
 		{3971A3A7-B270-4265-ACFC-7765303BF330}.Release|x86.Build.0 = Release|Win32
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Debug|x64.ActiveCfg = Debug|x64
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Debug|x64.Build.0 = Debug|x64
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Debug|x86.ActiveCfg = Debug|Win32
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Debug|x86.Build.0 = Debug|Win32
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Release|x64.ActiveCfg = Release|x64
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Release|x64.Build.0 = Release|x64
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Release|x86.ActiveCfg = Release|Win32
+		{8FCA9C6B-0A0B-4FFF-B8DC-583155CBC653}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

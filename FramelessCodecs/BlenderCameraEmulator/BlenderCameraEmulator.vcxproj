@@ -152,8 +152,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BlenderCameraEmulator.cpp" />
+    <ClCompile Include="EventPixel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EventPixel.h" />
     <ClInclude Include="tinyexr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

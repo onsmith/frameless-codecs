@@ -18,9 +18,15 @@
     <ClCompile Include="BlenderCameraEmulator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EventPixel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="tinyexr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventPixel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
